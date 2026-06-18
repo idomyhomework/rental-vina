@@ -314,26 +314,22 @@ alembic downgrade -1  # roll back one migration
 
 ## Comments
 
-Use a **three-tier** comment system. Be consistent: banners and dividers are **76 characters wide** (the line plus the `// ` or `# ` prefix). Apply these to **every** component, hook, function, TanStack Query hook, Context provider, route handler, service, model, schema, dependency, constructor, and constraint — on both frontend and backend.
+Use a **three-tier** comment system with short dividers. Apply these to components, hooks, functions, route handlers, services, models, schemas, and dependencies — on both frontend and backend.
 
-### Tier 1 — Banner (top of file / major region)
+### Tier 1 — Banner (top of file)
 
-Title in **UPPERCASE**. Use sparingly: one per file region.
+Title in **UPPERCASE**. One per file.
 
 **TypeScript / TSX**
 
 ```tsx
-// ═══════════════════════════════════════════════════════════════════════════
-//  PROPERTY DETAIL — VIEW
-// ═══════════════════════════════════════════════════════════════════════════
+// --- PROPERTY DETAIL — VIEW ---
 ```
 
 **Python**
 
 ```python
-# ═══════════════════════════════════════════════════════════════════════════
-#  INQUIRIES — SERVICE
-# ═══════════════════════════════════════════════════════════════════════════
+# --- INQUIRIES — SERVICE ---
 ```
 
 ### Tier 2 — Divider (section within a file)
@@ -343,13 +339,13 @@ Title in **sentence case**.
 **TypeScript / TSX**
 
 ```tsx
-// ── Derived state ──────────────────────────────────────────────────────────
+// --- Derived state ---
 ```
 
 **Python**
 
 ```python
-# ── Spam checks ────────────────────────────────────────────────────────────
+# --- Spam checks ---
 ```
 
 ### Tier 3 — Inline note (single line, explains a decision)
@@ -373,21 +369,19 @@ Prefix with `→`. Keep it short.
 **Server Component page (TSX)**
 
 ```tsx
-// ═══════════════════════════════════════════════════════════════════════════
-//  PROPERTY DETAIL — PAGE  (Server Component, SEO-critical)
-// ═══════════════════════════════════════════════════════════════════════════
+// --- PROPERTY DETAIL — PAGE (Server Component, SEO-critical) ---
 
 import { getProperty } from "@/lib/api/properties";
 import { buildPropertyJsonLd } from "@/lib/seo/jsonld";
 
-// ── Params ─────────────────────────────────────────────────────────────────
+// --- Params ---
 interface PageProps {
   params: { locale: string; slug: string };
 }
 
-// ── Page ───────────────────────────────────────────────────────────────────
+// --- Page ---
 export default async function PropertyPage({ params }: PageProps) {
-  // ── Server-side fetch (crawlable) ──────────────────────────────────────
+  // --- Server-side fetch (crawlable) ---
   const property = await getProperty(params.slug, params.locale);
 
   // → JSON-LD is rendered server-side so Google sees the structured data
@@ -408,16 +402,14 @@ export default async function PropertyPage({ params }: PageProps) {
 **TanStack Query mutation hook (TS, admin client)**
 
 ```tsx
-// ═══════════════════════════════════════════════════════════════════════════
-//  INQUIRIES — HOOKS  (TanStack Query, admin client)
-// ═══════════════════════════════════════════════════════════════════════════
+// --- INQUIRIES — HOOKS (TanStack Query, admin client) ---
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { api } from "@/lib/api";
 import type { InquiryCreate, Inquiry } from "./types";
 
-// ── Create inquiry ─────────────────────────────────────────────────────────
+// --- Create inquiry ---
 export function useCreateInquiry() {
   const queryClient = useQueryClient();
 
@@ -432,9 +424,7 @@ export function useCreateInquiry() {
 **FastAPI router (Python)**
 
 ```python
-# ═══════════════════════════════════════════════════════════════════════════
-#  INQUIRIES — ROUTER
-# ═══════════════════════════════════════════════════════════════════════════
+# --- INQUIRIES — ROUTER ---
 
 from fastapi import APIRouter, Depends
 
@@ -445,14 +435,14 @@ from app.core.dependencies import verify_turnstile, rate_limit
 router = APIRouter(prefix="/inquiries", tags=["inquiries"])
 
 
-# ── Create inquiry ─────────────────────────────────────────────────────────
+# --- Create inquiry ---
 @router.post("", response_model=InquiryRead, status_code=201)
 async def create_inquiry(
     payload: InquiryCreate,
     _spam=Depends(verify_turnstile),   # → blocks bots before any DB write
     _limit=Depends(rate_limit),
 ):
-    # ── Persist + notify owner ─────────────────────────────────────────────
+    # --- Persist + notify owner ---
     return await inquiry_service.create(payload)
 ```
 

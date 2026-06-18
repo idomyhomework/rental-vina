@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alquileres Vinaròs — Tu hogar frente al mar en la Costa del Azahar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ═══════════════════════════════════════════════════════════════════════
+       DESIGN TOKENS — Airbnb structural system · Vinaròs brand palette
+       Coral (#EA5A41) plays the Rausch role: single CTA voltage, used scarcely
+     ═══════════════════════════════════════════════════════════════════════ */
+  :root {
+    --canvas:          #ffffff;
+    --surface-soft:    #FBF7F2;
+    --surface-strong:  #F2EDE6;
+    --ink:             #211E1B;
+    --body-text:       #3D3530;
+    --muted:           #6E665E;
+    --muted-soft:      #928A80;
+    --hairline:        #ECE5DC;
+    --hairline-soft:   #F2EDE8;
+    --border-strong:   #C8BDB5;
+    --sea:             #0E6B73;
+    --sea-soft:        #E6F1F1;
+    --accent:          #EA5A41;
+    --accent-dark:     #C8462E;
+    --accent-soft:     #FCEBE5;
+
+    /* → single elevation tier — exact Airbnb spec, no other shadows used */
+    --shadow:    rgba(0,0,0,.02) 0 0 0 1px, rgba(0,0,0,.04) 0 2px 6px 0, rgba(0,0,0,.1) 0 4px 8px 0;
+
+    /* → shape scale: sm 8 · md 14 · lg 20 · xl 32 · full */
+    --r-sm:   8px;
+    --r-md:   14px;
+    --r-lg:   20px;
+    --r-xl:   32px;
+    --r-full: 9999px;
+
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-sans:    'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html  { scroll-behavior: smooth; }
+  body  { font-family: var(--font-sans); color: var(--ink); background: var(--canvas); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  a     { color: inherit; text-decoration: none; }
+  img   { display: block; max-width: 100%; }
+  ::selection { background: var(--accent-soft); }
+
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+
+  /* ── top-nav: 80px height, brand left · links center · utils right ───── */
+  header { position: fixed; inset-block-start: 0; inset-inline: 0; z-index: 60;
+           transition: background .3s, border-color .3s, box-shadow .3s;
+           border-bottom: 1px solid transparent; }
+  .nav   { display: flex; align-items: center; height: 80px; }
+
+  .brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+           font-family: var(--font-display); font-size: 1.32rem; font-weight: 600;
+           letter-spacing: -.01em; color: #fff; white-space: nowrap;
+           transition: color .3s; }
+  .brand svg { width: 26px; height: 26px; flex: none; }
+
+  /* → nav-link: 16px / 600, underline grows on hover */
+  .nav-links { display: flex; gap: 28px; margin: 0 auto; }
+  .nav-links a { font-size: 1rem; font-weight: 600; line-height: 1.25;
+                 color: rgba(255,255,255,.9); transition: color .2s;
+                 position: relative; padding-bottom: 2px; }
+  .nav-links a::after { content: ''; position: absolute; left: 0; bottom: -2px;
+                        height: 2px; width: 0; background: var(--accent);
+                        transition: width .25s; }
+  .nav-links a:hover::after { width: 100%; }
+
+  .nav-utils { display: flex; align-items: center; gap: 16px; margin-left: auto; }
+  .langs     { display: flex; align-items: center; gap: 10px; }
+  .langs a   { font-size: .82rem; font-weight: 600; letter-spacing: .02em;
+               color: rgba(255,255,255,.75); transition: color .2s; }
+  .langs a:hover, .langs a.active { color: #fff; }
+  .langs .sep { width: 1px; height: 14px; background: rgba(255,255,255,.28); }
+
+  /* → pill CTA: rounded.full, 48px height */
+  .call { display: inline-flex; align-items: center; gap: 8px; height: 48px;
+          padding: 0 20px; background: #fff; color: var(--ink);
+          font-size: .9rem; font-weight: 600; border-radius: var(--r-full);
+          transition: transform .2s, box-shadow .2s; }
+  .call svg { width: 16px; height: 16px; }
+  .call:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+
+  .burger { display: none; width: 44px; height: 44px; border: none;
+            background: none; cursor: pointer; align-items: center;
+            justify-content: center; color: #fff; }
+  .burger svg { width: 26px; height: 26px; }
+
+  /* solid state on scroll */
+  header.solid { background: var(--canvas); border-color: var(--hairline);
+                 box-shadow: 0 1px 0 rgba(0,0,0,.04); }
+  header.solid .brand         { color: var(--ink); }
+  header.solid .nav-links a   { color: var(--ink); }
+  header.solid .langs a       { color: var(--muted); }
+  header.solid .langs a:hover,
+  header.solid .langs a.active { color: var(--ink); }
+  header.solid .langs .sep    { background: var(--hairline); }
+  header.solid .call          { background: var(--accent); color: #fff; }
+  header.solid .burger        { color: var(--ink); }
+
+  /* ── Hero — photography-led, h1 sits modestly so image carries weight ── */
+  .hero      { position: relative; min-height: 680px; display: flex;
+               align-items: flex-end; color: #fff;
+               background: linear-gradient(135deg, #0E6B73, #0a4e54); }
+  .hero-img  { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero::after { content: ''; position: absolute; inset: 0;
+                 background: linear-gradient(180deg,
+                   rgba(20,28,30,.44) 0%, rgba(20,28,30,.10) 30%,
+                   rgba(20,28,30,.28) 65%, rgba(20,28,30,.68) 100%); }
+  .hero-inner { position: relative; z-index: 2; width: 100%; padding: 140px 0 64px; }
+
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px;
+             font-size: .76rem; font-weight: 700; letter-spacing: .16em;
+             text-transform: uppercase; color: #fff;
+             background: rgba(255,255,255,.13); backdrop-filter: blur(4px);
+             padding: 7px 14px; border-radius: var(--r-full);
+             border: 1px solid rgba(255,255,255,.2); }
+
+  /* → display-xl equivalent: modest 28px desktop, Fraunces serif carries weight */
+  .hero h1 { font-family: var(--font-display); font-weight: 500;
+             font-size: clamp(1.75rem, 3.2vw, 2.5rem); line-height: 1.08;
+             letter-spacing: -.025em; margin: 20px 0 14px; max-width: 18ch;
+             text-shadow: 0 2px 24px rgba(0,0,0,.22); }
+  .hero h1 em { font-style: italic; color: #FFD9CE; }
+
+  /* → body-md: 16px/400, clamped for responsiveness */
+  .hero .lead { font-size: clamp(.95rem, 1.4vw, 1.1rem); max-width: 48ch;
+                color: rgba(255,255,255,.9); margin-bottom: 32px; line-height: 1.6;
+                text-shadow: 0 1px 12px rgba(0,0,0,.22); }
+
+  /* ── search-bar-pill: rounded.full · 64px · hairline segments · accent orb ─ */
+  .search { background: var(--canvas); border-radius: var(--r-full);
+            padding: 6px 6px 6px 8px; display: flex; align-items: center;
+            box-shadow: var(--shadow); max-width: 840px; min-height: 64px; }
+  .field  { flex: 1; display: flex; flex-direction: column; gap: 1px;
+            padding: 8px 24px; border-radius: var(--r-full);
+            cursor: pointer; transition: background .2s; min-width: 0; }
+  .field:hover { background: var(--surface-soft); }
+  .field + .field { border-left: 1px solid var(--hairline); }
+  /* → caption: 14px/500 uppercase per search-field-segment spec */
+  .field label  { font-size: .75rem; font-weight: 500; text-transform: uppercase;
+                  letter-spacing: .02em; color: var(--ink); line-height: 1.29;
+                  cursor: pointer; }
+  .field select { border: none; background: none; font-family: var(--font-sans);
+                  font-size: .9rem; font-weight: 400; color: var(--muted);
+                  cursor: pointer; outline: none; padding: 1px 0;
+                  appearance: none; width: 100%; line-height: 1.43; }
+  /* → search-orb: accent fill, 48×48 circle, single hottest color on page */
+  .go { flex: none; display: inline-flex; align-items: center; gap: 8px;
+        height: 48px; padding: 0 20px; background: var(--accent); color: #fff;
+        border: none; font-family: var(--font-sans); font-size: .9rem;
+        font-weight: 600; border-radius: var(--r-full); cursor: pointer;
+        transition: background .2s, transform .15s; margin-left: 4px;
+        white-space: nowrap; }
+  .go svg { width: 18px; height: 18px; }
+  .go:hover  { background: var(--accent-dark); }
+  .go:active { transform: scale(.98); }
+
+  /* ── Trust strip — white canvas, no dark contrast band ───────────────── */
+  .trust       { background: var(--canvas); border-bottom: 1px solid var(--hairline); }
+  .trust .wrap { display: flex; flex-wrap: wrap; gap: 12px 48px;
+                 justify-content: center; padding: 22px 32px; }
+  .trust-item  { display: inline-flex; align-items: center; gap: 10px;
+                 font-size: .9rem; font-weight: 500; color: var(--ink); }
+  .trust-item svg { width: 18px; height: 18px; color: var(--accent); flex: none; }
+
+  /* ── Section shells — spacing.section = 64px ─────────────────────────── */
+  section { scroll-margin-top: 92px; }
+  .pad    { padding: 64px 0; }
+
+  .sec-eyebrow { display: block; font-size: .76rem; font-weight: 700;
+                 letter-spacing: .16em; text-transform: uppercase;
+                 color: var(--sea); margin-bottom: 12px; }
+  /* → display-lg: 22px/500 — modest, trusting layout for hierarchy */
+  .sec-title { font-family: var(--font-display); font-weight: 500;
+               font-size: clamp(1.4rem, 2.4vw, 1.9rem); line-height: 1.1;
+               letter-spacing: -.02em; }
+  .sec-head   { max-width: 560px; margin-bottom: 40px; }
+  .sec-head p { color: var(--muted); font-size: .95rem; margin-top: 14px; line-height: 1.6; }
+
+  /* ── Services — surface-soft background, rounded.md cards ───────────── */
+  .services  { background: var(--surface-soft); }
+  .feat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+  /* → flat base, one shadow tier on hover only */
+  .feat { background: var(--canvas); border: 1px solid var(--hairline);
+          border-radius: var(--r-md); padding: 28px 24px;
+          transition: box-shadow .25s, transform .25s; }
+  .feat:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .feat .ic   { width: 48px; height: 48px; border-radius: var(--r-md);
+                background: var(--accent-soft); color: var(--accent-dark);
+                display: flex; align-items: center; justify-content: center;
+                margin-bottom: 16px; }
+  .feat .ic svg { width: 24px; height: 24px; }
+  /* → title-md: 16px/600 */
+  .feat h3 { font-size: 1rem; font-weight: 600; line-height: 1.25; margin-bottom: 8px; }
+  /* → body-sm: 14px/400 muted */
+  .feat p  { color: var(--muted); font-size: .88rem; font-weight: 400; line-height: 1.55; }
+
+  .transfer-rates      { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+  .transfer-rates span { font-size: .78rem; font-weight: 600;
+                         background: var(--sea-soft); color: var(--sea);
+                         padding: 4px 10px; border-radius: var(--r-sm); }
+
+  /* ── Listings — dense marketplace grid, 16px gutters, photo-first cards ─ */
+  .listings-head { display: flex; align-items: flex-end; justify-content: space-between;
+                   gap: 24px; flex-wrap: wrap; margin-bottom: 40px; }
+  .count-pill    { font-size: .88rem; font-weight: 600; color: var(--muted);
+                   background: var(--surface-soft); border: 1px solid var(--hairline);
+                   padding: 9px 16px; border-radius: var(--r-full); white-space: nowrap; }
+  .count-pill b  { color: var(--ink); }
+
+  /* → 4-up at desktop; columns drop cleanly at breakpoints — never reflow rows */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(252px, 1fr));
+          gap: 36px 16px; }
+
+  /* → property-card: no card surface at rest */
+  .card       { display: flex; flex-direction: column; background: transparent; }
+  /* → property-card-photo: rounded.md corner clipping */
+  .card-media { position: relative; display: block; aspect-ratio: 4/3.1;
+                border-radius: var(--r-md); overflow: hidden;
+                background: linear-gradient(135deg, #0E6B73, #0a4e54); }
+  .card-media img { width: 100%; height: 100%; object-fit: cover;
+                    transition: transform .55s cubic-bezier(.2,.7,.2,1); }
+  .card:hover .card-media img { transform: scale(1.04); }
+  .card-media img.fail { opacity: 0; }
+  .card-media .ph { position: absolute; inset: 0; display: flex; align-items: center;
+                    justify-content: center; color: rgba(255,255,255,.8);
+                    font-size: .85rem; font-weight: 600; pointer-events: none; }
+
+  /* → guest-favorite-badge style: white pill, shadow-float, 11px/600 */
+  .loc-pill { position: absolute; left: 12px; top: 12px;
+              display: inline-flex; align-items: center; gap: 5px;
+              background: var(--canvas); color: var(--ink);
+              font-size: .72rem; font-weight: 600; line-height: 1.18;
+              padding: 5px 10px; border-radius: var(--r-full);
+              box-shadow: var(--shadow); }
+  .loc-pill svg { width: 12px; height: 12px; color: var(--accent); }
+
+  /* → icon-button-circle: 34px circle, white bg */
+  .fav     { position: absolute; right: 12px; top: 12px; width: 34px; height: 34px;
+             border-radius: 50%; border: none; background: rgba(255,255,255,.88);
+             display: flex; align-items: center; justify-content: center;
+             cursor: pointer; transition: transform .18s; }
+  .fav svg { width: 18px; height: 18px; fill: none; stroke: var(--ink);
+             stroke-width: 2; transition: fill .2s, stroke .2s; }
+  .fav:hover { transform: scale(1.1); }
+  .fav.on svg { fill: var(--accent); stroke: var(--accent); }
+
+  /* card body — 16px padding (spacing.base) */
+  .card-body    { padding: 14px 0 4px; }
+  /* → title-md: 16px/600 */
+  .card-body h3 { font-size: 1rem; font-weight: 600; line-height: 1.25; }
+  .card-body h3 a:hover { color: var(--accent-dark); }
+  /* → body-sm: 14px/400 muted */
+  .meta     { display: flex; align-items: center; gap: 14px; color: var(--muted);
+              font-size: .85rem; font-weight: 400; line-height: 1.43; margin: 6px 0 12px; }
+  .meta span { display: inline-flex; align-items: center; gap: 5px; }
+  .meta svg  { width: 15px; height: 15px; color: var(--sea); }
+
+  .price-row  { display: flex; align-items: baseline; justify-content: space-between;
+                gap: 10px; flex-wrap: wrap; }
+  .price      { font-size: .95rem; font-weight: 700; }
+  .price small { font-size: .82rem; font-weight: 400; color: var(--muted); margin-left: 2px; }
+  .price.consult { font-size: .9rem; color: var(--sea); font-weight: 500; }
+  .longstay { font-size: .78rem; font-weight: 600; color: var(--sea);
+              background: var(--sea-soft); padding: 4px 10px; border-radius: var(--r-sm); }
+
+  /* → button-tertiary-text: ink, no surface, underline on hover */
+  .more     { display: inline-flex; align-items: center; gap: 5px; margin-top: 10px;
+              font-size: .88rem; font-weight: 500; color: var(--ink);
+              transition: opacity .2s; }
+  .more svg { width: 14px; height: 14px; transition: transform .2s; }
+  .card:hover .more     { opacity: .7; }
+  .card:hover .more svg { transform: translateX(3px); }
+
+  .empty      { display: none; text-align: center; padding: 60px 0; color: var(--muted); }
+  .empty.show { display: block; }
+
+  /* ── Contact — surface-soft bg, white canvas inputs ─────────────────── */
+  .contact       { background: var(--surface-soft); border-top: 1px solid var(--hairline); }
+  .contact .grid2 { display: grid; grid-template-columns: 1.05fr .95fr;
+                    gap: 56px; align-items: start; }
+  .form          { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form .full    { grid-column: 1 / -1; }
+  .form label    { display: block; font-size: .76rem; font-weight: 500;
+                   text-transform: uppercase; letter-spacing: .04em;
+                   color: var(--muted); margin-bottom: 7px; }
+
+  /* → text-input spec: white canvas, hairline, rounded.sm, 56px height
+       focus: 2px ink border — no glow, no ring */
+  .form input, .form textarea {
+    width: 100%; background: var(--canvas); border: 1px solid var(--hairline);
+    border-radius: var(--r-sm); padding: 16px 14px; color: var(--ink);
+    font-family: var(--font-sans); font-size: .96rem; font-weight: 400;
+    line-height: 1.5; transition: border .2s; min-height: 56px; }
+  .form input::placeholder,
+  .form textarea::placeholder { color: var(--muted-soft); }
+  .form input:focus,
+  .form textarea:focus { outline: none; border: 2px solid var(--accent); }
+  .form textarea { resize: vertical; min-height: 120px; }
+
+  /* → button-primary: accent fill, rounded.sm, 48px height, 16px/500 */
+  .submit { grid-column: 1 / -1; display: inline-flex; align-items: center;
+            justify-content: center; gap: 9px; height: 48px; padding: 0 24px;
+            background: var(--accent); color: #fff; border: none;
+            font-family: var(--font-sans); font-size: 1rem; font-weight: 500;
+            border-radius: var(--r-sm); cursor: pointer;
+            transition: background .2s, transform .15s; }
+  .submit:hover  { background: var(--accent-dark); }
+  .submit:active { transform: scale(.99); }
+  .req { grid-column: 1 / -1; font-size: .8rem; color: var(--muted); }
+
+  .ph-cards { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+  /* → host-card style: white, rounded.md, shadow on hover */
+  .ph-card { display: flex; align-items: center; gap: 15px;
+             background: var(--canvas); border: 1px solid var(--hairline);
+             border-radius: var(--r-md); padding: 16px 18px;
+             transition: box-shadow .2s; }
+  .ph-card:hover { box-shadow: var(--shadow); }
+  .ph-card .ic   { width: 44px; height: 44px; border-radius: var(--r-md);
+                   background: var(--accent-soft); color: var(--accent-dark);
+                   display: flex; align-items: center; justify-content: center;
+                   flex: none; }
+  .ph-card .ic svg { width: 22px; height: 22px; }
+  .ph-card .t  { font-size: .76rem; font-weight: 500; color: var(--muted); }
+  .ph-card .v  { font-size: 1rem; font-weight: 600; }
+
+  .socials  { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .soc { display: inline-flex; align-items: center; gap: 10px;
+         background: var(--canvas); border: 1px solid var(--hairline);
+         border-radius: var(--r-md); padding: 13px 16px;
+         font-size: .9rem; font-weight: 600;
+         transition: box-shadow .2s; }
+  .soc:hover { box-shadow: var(--shadow); }
+  .soc svg   { width: 19px; height: 19px; flex: none; }
+
+  /* ── Footer — footer-light: white canvas, 3-column + legal band ─────── */
+  footer      { background: var(--canvas); border-top: 1px solid var(--hairline); }
+  .footer-top { padding: 48px 0 40px; display: grid;
+                grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 24px; }
+
+  .footer-brand     { display: flex; align-items: center; gap: 10px;
+                      font-family: var(--font-display); font-size: 1.2rem;
+                      font-weight: 600; color: var(--ink); margin-bottom: 14px; }
+  .footer-brand svg { width: 24px; height: 24px; }
+  /* → body-sm: 14px/400 muted */
+  .footer-tagline { font-size: .88rem; color: var(--muted); line-height: 1.55;
+                    max-width: 26ch; }
+
+  /* → title-sm: 16px/500 for column heads */
+  .footer-col h4 { font-size: .95rem; font-weight: 500; line-height: 1.25;
+                   color: var(--ink); margin-bottom: 16px; }
+  .footer-col nav  { display: flex; flex-direction: column; gap: 12px; }
+  /* → footer-link: body-sm 14px/400 muted, ink on hover */
+  .footer-col nav a { font-size: .88rem; font-weight: 400; color: var(--muted);
+                      transition: color .2s; }
+  .footer-col nav a:hover { color: var(--ink); }
+
+  /* → legal-band: caption-sm 13px/400 muted, hairline top */
+  .legal-band { display: flex; align-items: center; justify-content: space-between;
+                gap: 16px; flex-wrap: wrap; padding: 20px 0;
+                border-top: 1px solid var(--hairline); }
+  .legal-copy { font-size: .82rem; color: var(--muted); }
+  .legal-langs { display: flex; align-items: center; gap: 14px; }
+  .legal-langs a { font-size: .82rem; font-weight: 600; color: var(--muted);
+                   transition: color .2s; }
+  .legal-langs a:hover, .legal-langs a.active { color: var(--ink); }
+  .legal-langs .sep { width: 1px; height: 12px; background: var(--hairline); }
+  .legal-socials    { display: flex; align-items: center; gap: 16px; }
+  .legal-socials a  { color: var(--muted); transition: color .2s; display: flex; }
+  .legal-socials a:hover { color: var(--ink); }
+  .legal-socials svg { width: 18px; height: 18px; }
+
+  /* ── Mobile menu ─────────────────────────────────────────────────────── */
+  .mobile-menu { position: fixed; inset: 0; z-index: 80; background: var(--canvas);
+                 transform: translateX(100%);
+                 transition: transform .32s cubic-bezier(.4,0,.2,1);
+                 display: flex; flex-direction: column; padding: 24px 28px; }
+  .mobile-menu.open { transform: translateX(0); }
+  .mm-top      { display: flex; align-items: center; justify-content: space-between; height: 54px; }
+  .mm-top .brand { color: var(--ink); }
+  .mm-close    { background: none; border: none; cursor: pointer; width: 44px; height: 44px;
+                 color: var(--ink); display: flex; align-items: center; justify-content: center; }
+  .mm-close svg { width: 28px; height: 28px; }
+  .mm-links    { display: flex; flex-direction: column; gap: 4px; margin-top: 30px; }
+  .mm-links a  { font-family: var(--font-display); font-size: 1.6rem; font-weight: 500;
+                 padding: 14px 0; border-bottom: 1px solid var(--hairline); color: var(--ink); }
+  .mm-langs    { display: flex; gap: 18px; margin-top: 30px; }
+  .mm-langs a  { font-weight: 600; color: var(--muted); font-size: .88rem; }
+  .mm-call     { margin-top: auto; display: inline-flex; align-items: center;
+                 justify-content: center; gap: 9px; background: var(--accent);
+                 color: #fff; font-weight: 600; font-size: .95rem;
+                 padding: 15px; border-radius: var(--r-md); }
+
+  /* ── Responsive ──────────────────────────────────────────────────────── */
+  @media (max-width: 1080px) {
+    .feat-grid  { grid-template-columns: repeat(2, 1fr); }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 860px) {
+    .nav-links, .langs, .nav-utils .call { display: none; }
+    .burger  { display: flex; }
+    .contact .grid2 { grid-template-columns: 1fr; gap: 40px; }
+    /* pill collapses to rounded-lg card on mobile */
+    .search  { flex-wrap: wrap; border-radius: var(--r-lg); padding: 8px; min-height: auto; }
+    .field   { flex: 1 1 40%; border-left: none !important; border-radius: var(--r-md); }
+    .go      { flex: 1 1 100%; height: 48px; justify-content: center;
+               margin-left: 0; margin-top: 4px; border-radius: var(--r-md); }
+    .hero    { min-height: 600px; }
+    .legal-band { flex-direction: column; align-items: flex-start; gap: 14px; }
+  }
+  @media (max-width: 560px) {
+    .wrap        { padding: 0 18px; }
+    .pad         { padding: 48px 0; }
+    .feat-grid   { grid-template-columns: 1fr; }
+    .form        { grid-template-columns: 1fr; }
+    .field       { flex: 1 1 100%; }
+    .socials     { grid-template-columns: 1fr; }
+    .footer-top  { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body>
+
+<header id="hdr">
+  <div class="wrap nav">
+    <a href="#" class="brand" aria-label="Alquileres Vinaròs - inicio">
+      <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <g fill="#EA5A41">
+          <ellipse cx="16" cy="7.5"  rx="3.4" ry="5.5"/>
+          <ellipse cx="16" cy="24.5" rx="3.4" ry="5.5"/>
+          <ellipse cx="7.5"  cy="16" rx="5.5" ry="3.4"/>
+          <ellipse cx="24.5" cy="16" rx="5.5" ry="3.4"/>
+          <ellipse cx="10" cy="10" rx="3.4" ry="5.5" transform="rotate(45 10 10)"/>
+          <ellipse cx="22" cy="22" rx="3.4" ry="5.5" transform="rotate(45 22 22)"/>
+          <ellipse cx="22" cy="10" rx="5.5" ry="3.4" transform="rotate(45 22 10)"/>
+          <ellipse cx="10" cy="22" rx="5.5" ry="3.4" transform="rotate(45 10 22)"/>
+        </g>
+        <circle cx="16" cy="16" r="3.2" fill="#F7C948"/>
+      </svg>
+      Alquileres Vinaròs
+    </a>
+    <nav class="nav-links">
+      <a href="#alojamientos">Catálogo</a>
+      <a href="#servicios">Servicios</a>
+      <a href="#costa">Costa del Azahar</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <div class="nav-utils">
+      <div class="langs">
+        <a href="#" class="active">ES</a><span class="sep"></span>
+        <a href="https://www.alquileresturisticosvinaros.com/ru">RU</a><span class="sep"></span>
+        <a href="https://www.alquileresturisticosvinaros.com/eng">EN</a><span class="sep"></span>
+        <a href="https://www.alquileresturisticosvinaros.com/uk">UK</a>
+      </div>
+      <a href="tel:+34659151126" class="call">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Llámanos
+      </a>
+    </div>
+    <button class="burger" id="burger" aria-label="Abrir menú">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mm-top">
+    <span class="brand">Alquileres Vinaròs</span>
+    <button class="mm-close" id="mmClose" aria-label="Cerrar menú">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+    </button>
+  </div>
+  <nav class="mm-links">
+    <a href="#alojamientos" data-close>Catálogo</a>
+    <a href="#servicios"    data-close>Servicios</a>
+    <a href="#costa"        data-close>Costa del Azahar</a>
+    <a href="#contacto"     data-close>Contacto</a>
+  </nav>
+  <div class="mm-langs">
+    <a href="#">ES</a>
+    <a href="https://www.alquileresturisticosvinaros.com/ru">RU</a>
+    <a href="https://www.alquileresturisticosvinaros.com/eng">EN</a>
+    <a href="https://www.alquileresturisticosvinaros.com/uk">UK</a>
+  </div>
+  <a href="tel:+34659151126" class="mm-call">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    +34 659 151 126
+  </a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <img class="hero-img" src="https://www.alquileresturisticosvinaros.com/images/Apartamento%20Vistas%20al%20Mar/main.jpg" alt="Apartamento con vistas al mar en Vinaròs" onerror="this.style.display='none'">
+  <div class="wrap hero-inner">
+    <span class="eyebrow">Vinaròs · Peñíscola · Costa del Azahar</span>
+    <h1>Tu hogar <em>frente al mar</em><br>en la Costa del Azahar</h1>
+    <p class="lead">Apartamentos y villas seleccionados para tus vacaciones en el Mediterráneo. Gestión profesional, atención en cuatro idiomas y estancias inolvidables.</p>
+    <form class="search" id="searchBar" autocomplete="off">
+      <div class="field">
+        <label for="fLoc">Destino</label>
+        <select id="fLoc">
+          <option value="all">Toda la costa</option>
+          <option value="Vinaròs">Vinaròs</option>
+          <option value="Peñíscola">Peñíscola</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="fGuests">Huéspedes</label>
+        <select id="fGuests">
+          <option value="0">Cualquiera</option>
+          <option value="2">2 o más</option>
+          <option value="4">4 o más</option>
+          <option value="6">6 o más</option>
+          <option value="8">8 o más</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="fBeds">Habitaciones</label>
+        <select id="fBeds">
+          <option value="0">Cualquiera</option>
+          <option value="1">1 o más</option>
+          <option value="2">2 o más</option>
+          <option value="3">3 o más</option>
+          <option value="4">4 o más</option>
+        </select>
+      </div>
+      <button type="submit" class="go">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+        Buscar
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- TRUST -->
+<div class="trust">
+  <div class="wrap">
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Más de 20 propiedades</span>
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Vinaròs &amp; Peñíscola</span>
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>Atención en 4 idiomas</span>
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Gestión profesional</span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services pad" id="servicios">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-eyebrow">Por qué reservar con nosotros</span>
+      <h2 class="sec-title">Unas vacaciones cómodas,<br>de principio a fin</h2>
+      <p>Te ofrecemos descanso junto al mar en Vinaròs y Peñíscola: lugares tranquilos, bien comunicados y con todo lo que necesitas para disfrutar en familia o con amigos.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <h3>Vistas al mar</h3>
+        <p>Apartamentos junto al Mediterráneo con vistas impresionantes y todas las comodidades.</p>
+      </div>
+      <div class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <h3>Gestión profesional</h3>
+        <p>Propiedades bien mantenidas y siempre listas para recibirte. Nos ocupamos de todo.</p>
+      </div>
+      <div class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+        <h3>Servicio de transfer</h3>
+        <p>Te recogemos en el aeropuerto y te llevamos a tu alojamiento sin complicaciones.</p>
+        <div class="transfer-rates">
+          <span>Barcelona 180€</span><span>Valencia 150€</span><span>Castellón 80€</span>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <h3>Atención cercana</h3>
+        <p>Hablamos español, ruso, inglés y ucraniano. Resolvemos tus dudas por WhatsApp, Telegram o teléfono.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LISTINGS -->
+<section class="pad" id="alojamientos">
+  <div class="wrap">
+    <div class="listings-head">
+      <div class="sec-head" style="margin-bottom:0">
+        <span class="sec-eyebrow">Alojamientos disponibles</span>
+        <h2 class="sec-title">Las mejores ofertas frente al mar</h2>
+      </div>
+      <div class="count-pill" id="countPill"><b>21</b> alojamientos</div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty">
+      <p style="font-size:1.05rem;font-weight:600;margin-bottom:6px">No hay alojamientos con esos filtros</p>
+      <p style="font-size:.9rem;color:var(--muted)">Prueba a ampliar la búsqueda o <a href="#contacto" style="color:var(--accent-dark);font-weight:600;text-decoration:underline">escríbenos</a> y te ayudamos a encontrar el tuyo.</p>
+    </div>
+  </div>
+</section>
+
+<section id="costa" style="height:0;overflow:hidden"></section>
+
+<!-- CONTACT -->
+<section class="contact pad" id="contacto">
+  <div class="wrap grid2">
+    <div>
+      <div class="sec-head">
+        <span class="sec-eyebrow">Contacto</span>
+        <h2 class="sec-title">¿Hablamos de tus vacaciones?</h2>
+        <p>Cuéntanos qué fechas y cuántas personas sois y te proponemos el alojamiento perfecto. Te respondemos lo antes posible.</p>
+      </div>
+      <form class="form" onsubmit="event.preventDefault();this.reset();alert('Gracias, te contactaremos pronto. (Demostración)')">
+        <div><label for="n">Nombre *</label><input id="n" required placeholder="Tu nombre"></div>
+        <div><label for="e">Email *</label><input id="e" type="email" required placeholder="tucorreo@email.com"></div>
+        <div class="full"><label for="s">Asunto</label><input id="s" placeholder="Fechas, nº de personas, destino…"></div>
+        <div class="full"><label for="m">Mensaje *</label><textarea id="m" required placeholder="Cuéntanos lo que necesitas"></textarea></div>
+        <button type="submit" class="submit">Enviar mensaje</button>
+        <p class="req">* Campos obligatorios</p>
+      </form>
+    </div>
+    <div>
+      <div class="ph-cards">
+        <a href="tel:+34659151126" class="ph-card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+          <div><div class="t">Teléfono / WhatsApp</div><div class="v">+34 659 151 126</div></div>
+        </a>
+        <a href="tel:+34637198130" class="ph-card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+          <div><div class="t">Teléfono adicional</div><div class="v">+34 637 198 130</div></div>
+        </a>
+      </div>
+      <div class="socials">
+        <a href="https://wa.me/34659151126" class="soc"><svg viewBox="0 0 24 24" fill="#25D366"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.8 1-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.2-.4.2-.4.6-1.2a.4.4 0 0 0 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.7.3 2.8 2.8 0 0 0-.9 2.1 4.9 4.9 0 0 0 1 2.6 11 11 0 0 0 4.3 3.8c1.6.7 1.7.5 2 .4a2.4 2.4 0 0 0 1.6-1.1 2 2 0 0 0 .1-1.1c0-.1-.2-.2-.4-.3z"/></svg>WhatsApp</a>
+        <a href="https://t.me/lyudmylahavrylyuk" class="soc"><svg viewBox="0 0 24 24" fill="#229ED9"><path d="M22 3 2.5 10.6c-1.1.4-1 1.1-.2 1.3l5 1.6 1.9 6c.3.7.5 1 .9 1s.6-.3.9-.7l2.4-2.4 5 3.7c.9.5 1.6.2 1.8-.9L23.9 4.5c.3-1.4-.5-2-1.9-1.5zM8.5 13.3l9.6-6c.4-.3.8-.1.5.2l-8 7.3-.3 3.3z"/></svg>Telegram</a>
+        <a href="https://www.instagram.com/havrylyuklyudmyla/" class="soc"><svg viewBox="0 0 24 24" fill="none" stroke="#E1306C" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#E1306C" stroke="none"/></svg>Instagram</a>
+        <a href="https://www.facebook.com/lhavrylyuk" class="soc"><svg viewBox="0 0 24 24" fill="#1877F2"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg>Facebook</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER — footer-light: white canvas, 3-column link grid + legal band -->
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <!-- col 0: brand masthead -->
+      <div>
+        <div class="footer-brand">
+          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <g fill="#EA5A41">
+              <ellipse cx="16" cy="7.5"  rx="3.4" ry="5.5"/>
+              <ellipse cx="16" cy="24.5" rx="3.4" ry="5.5"/>
+              <ellipse cx="7.5"  cy="16" rx="5.5" ry="3.4"/>
+              <ellipse cx="24.5" cy="16" rx="5.5" ry="3.4"/>
+              <ellipse cx="10" cy="10" rx="3.4" ry="5.5" transform="rotate(45 10 10)"/>
+              <ellipse cx="22" cy="22" rx="3.4" ry="5.5" transform="rotate(45 22 22)"/>
+              <ellipse cx="22" cy="10" rx="5.5" ry="3.4" transform="rotate(45 22 10)"/>
+              <ellipse cx="10" cy="22" rx="5.5" ry="3.4" transform="rotate(45 10 22)"/>
+            </g>
+            <circle cx="16" cy="16" r="3.2" fill="#F7C948"/>
+          </svg>
+          Alquileres Vinaròs
+        </div>
+        <p class="footer-tagline">Alquileres turísticos en la Costa del Azahar. Gestión profesional, atención personal.</p>
+      </div>
+      <!-- col 1 -->
+      <div class="footer-col">
+        <h4>Alojamientos</h4>
+        <nav>
+          <a href="#alojamientos">Ver catálogo</a>
+          <a href="#alojamientos">Apartamentos en Vinaròs</a>
+          <a href="#alojamientos">Apartamentos en Peñíscola</a>
+          <a href="#alojamientos">Villas y adosados</a>
+        </nav>
+      </div>
+      <!-- col 2 -->
+      <div class="footer-col">
+        <h4>Servicios</h4>
+        <nav>
+          <a href="#servicios">Transfer aeropuerto</a>
+          <a href="#servicios">Gestión de propiedades</a>
+          <a href="#servicios">Atención multilingüe</a>
+          <a href="#costa">Costa del Azahar</a>
+        </nav>
+      </div>
+      <!-- col 3 -->
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <nav>
+          <a href="#contacto">Enviar mensaje</a>
+          <a href="tel:+34659151126">+34 659 151 126</a>
+          <a href="https://wa.me/34659151126">WhatsApp</a>
+          <a href="https://t.me/lyudmylahavrylyuk">Telegram</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- legal band -->
+    <div class="legal-band">
+      <span class="legal-copy">© 2026 Alquileres Vinaròs. Todos los derechos reservados.</span>
+      <div class="legal-langs">
+        <a href="#" class="active">ES</a><span class="sep"></span>
+        <a href="https://www.alquileresturisticosvinaros.com/ru">RU</a><span class="sep"></span>
+        <a href="https://www.alquileresturisticosvinaros.com/eng">EN</a><span class="sep"></span>
+        <a href="https://www.alquileresturisticosvinaros.com/uk">UK</a>
+      </div>
+      <div class="legal-socials">
+        <a href="https://www.instagram.com/havrylyuklyudmyla/" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <a href="https://www.facebook.com/lhavrylyuk" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg>
+        </a>
+        <a href="https://t.me/lyudmylahavrylyuk" aria-label="Telegram">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 3 2.5 10.6c-1.1.4-1 1.1-.2 1.3l5 1.6 1.9 6c.3.7.5 1 .9 1s.6-.3.9-.7l2.4-2.4 5 3.7c.9.5 1.6.2 1.8-.9L23.9 4.5c.3-1.4-.5-2-1.9-1.5zM8.5 13.3l9.6-6c.4-.3.8-.1.5.2l-8 7.3-.3 3.3z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const props = [
+ {id:1, name:"Apartamento Mar",          loc:"Vinaròs",   guests:8,  beds:3, sLow:80,  month:550,  img:"Apartamento Mar/main.jpg"},
+ {id:2, name:"Apartamento Obispo",       loc:"Vinaròs",   guests:8,  beds:3, sLow:90,  month:550,  img:"Apartamento Obispo/main.jpg"},
+ {id:4, name:"Apartamento Rio",          loc:"Vinaròs",   guests:5,  beds:2, sLow:90,  month:450,  img:"Apartamento Rio/main.jpg"},
+ {id:5, name:"Loft estudio",             loc:"Vinaròs",   guests:2,  beds:1, sLow:55,  month:420,  img:"Loft estudio/main.jpg"},
+ {id:8, name:"Apartamento Turquesa",     loc:"Vinaròs",   guests:6,  beds:3, sLow:80,  month:500,  img:"Apartamento Turquesa/main_TU9MJWL.jpg"},
+ {id:9, name:"Apartamento Azul del Mar", loc:"Vinaròs",   guests:8,  beds:4, sLow:100, month:600,  img:"Apartamento Azul del Mar/main.jpg"},
+ {id:11,name:"Piso Raimundo",            loc:"Vinaròs",   guests:9,  beds:3, sLow:90,  month:650,  img:"Piso Raimundo/Imagen_de_WhatsApp_2024-04-14_a_las_19.29.03_5ae5b59a.jpg"},
+ {id:12,name:"Piso Peñíscola",           loc:"Peñíscola", guests:8,  beds:3, sLow:80,  month:0,    img:"Piso Peñíscola/IMG-20190804-WA0089.jpg"},
+ {id:16,name:"Dúplex Borniol",           loc:"Vinaròs",   guests:6,  beds:2, sLow:80,  month:550,  img:"Dúplex Borniol/main.jpg"},
+ {id:18,name:"Apartamento San Albertо",  loc:"Vinaròs",   guests:8,  beds:2, sLow:80,  month:550,  img:"Apartamento San Albertо/main.jpg"},
+ {id:20,name:"Apartamento Pio Doce",     loc:"Vinaròs",   guests:8,  beds:3, sLow:80,  month:500,  img:"Apartamento Pio Doce/main_M5deugS.jpg"},
+ {id:21,name:"Villa Hermosa",            loc:"Vinaròs",   guests:12, beds:6, sLow:200, month:1350, img:"Villa Hermosa/main_vlqYmKC.jpg"},
+ {id:23,name:"Adosado con garaje",       loc:"Vinaròs",   guests:8,  beds:4, sLow:150, month:1200, img:"Adosado con garaje/main.jpg"},
+ {id:24,name:"Apartamento Poniente",     loc:"Vinaròs",   guests:4,  beds:1, sLow:80,  month:500,  img:"Apartamento Poniente/Imagen_de_WhatsApp_2025-02-09_a_las_23.37.47_dbe3dfe4.jpg"},
+ {id:25,name:"Casita pequeña",           loc:"Vinaròs",   guests:4,  beds:1, sLow:80,  month:420,  img:"Casita pequeña/main.jpg"},
+ {id:28,name:"Apartamento Malva",        loc:"Vinaròs",   guests:5,  beds:3, sLow:80,  month:500,  img:"Apartamentos Malva/main.jpeg"},
+ {id:29,name:"Apartamento Amapola",      loc:"Vinaròs",   guests:5,  beds:3, sLow:100, month:700,  img:"Apartamento Amapola/main_BkwoksI.jpg"},
+ {id:30,name:"Apartamento Plaza de Toros",loc:"Vinaròs",  guests:6,  beds:3, sLow:120, month:650,  img:"Apartamento Plaza de Toros./main.jpg"},
+ {id:34,name:"Apartamento Aquamarine",   loc:"Vinaròs",   guests:6,  beds:2, sLow:85,  month:500,  img:"Apartamento Aquamarine/main.jpg"},
+ {id:36,name:"Apartamento Laguna Azul",  loc:"Vinaròs",   guests:4,  beds:1, sLow:0,   month:0,    img:"Apartamento Laguna Azul/main.jpg"},
+ {id:37,name:"Apartamento Vistas al Mar",loc:"Vinaròs",   guests:6,  beds:3, sLow:100, month:600,  img:"Apartamento Vistas al Mar/main.jpg"}
+];
+
+const BASE   = "https://www.alquileresturisticosvinaros.com/images/";
+const DETAIL = "https://www.alquileresturisticosvinaros.com/catalog/";
+
+const pin     = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+const guestIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+const bedIc   = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 18v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5M2 18v3M22 18v3M4 11V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"/></svg>';
+const heart   = '<svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>';
+const arrow   = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+
+const gridEl = document.getElementById('grid');
+
+function render(list) {
+  gridEl.innerHTML = list.map(p => {
+    const url = DETAIL + p.id + '/';
+    const src = BASE + encodeURI(p.img);
+    const priceBlock = p.sLow > 0
+      ? `<div class="price">${p.sLow}€<small>/ noche</small></div>`
+      : `<div class="price consult">Consultar disponibilidad</div>`;
+    const longstay = p.month > 0 ? `<span class="longstay">${p.month}€/mes</span>` : '';
+    return `<article class="card" data-loc="${p.loc}" data-guests="${p.guests}" data-beds="${p.beds}">
+      <a class="card-media" href="${url}" target="_blank" rel="noopener">
+        <span class="ph">${p.name}</span>
+        <img loading="lazy" src="${src}" alt="${p.name} en ${p.loc}" onerror="this.classList.add('fail')">
+        <span class="loc-pill">${pin}${p.loc}</span>
+        <button class="fav" type="button" aria-label="Guardar ${p.name}" onclick="event.preventDefault();this.classList.toggle('on')">${heart}</button>
+      </a>
+      <div class="card-body">
+        <h3><a href="${url}" target="_blank" rel="noopener">${p.name}</a></h3>
+        <p class="meta"><span>${guestIc}${p.guests} huéspedes</span><span>${bedIc}${p.beds} hab.</span></p>
+        <div class="price-row">${priceBlock}${longstay}</div>
+        <a class="more" href="${url}" target="_blank" rel="noopener">Ver detalles ${arrow}</a>
+      </div>
+    </article>`;
+  }).join('');
+}
+render(props);
+
+const fLoc    = document.getElementById('fLoc');
+const fGuests = document.getElementById('fGuests');
+const fBeds   = document.getElementById('fBeds');
+const countPill = document.getElementById('countPill');
+const empty     = document.getElementById('empty');
+
+function applyFilters(scroll) {
+  const loc = fLoc.value, g = +fGuests.value, b = +fBeds.value;
+  const filtered = props.filter(p => (loc === 'all' || p.loc === loc) && p.guests >= g && p.beds >= b);
+  render(filtered);
+  countPill.innerHTML = `<b>${filtered.length}</b> ${filtered.length === 1 ? 'alojamiento' : 'alojamientos'}`;
+  empty.classList.toggle('show', filtered.length === 0);
+  if (scroll) document.getElementById('alojamientos').scrollIntoView({ behavior: 'smooth' });
+}
+document.getElementById('searchBar').addEventListener('submit', e => { e.preventDefault(); applyFilters(true); });
+
+const hdr = document.getElementById('hdr');
+const onScroll = () => hdr.classList.toggle('solid', window.scrollY > 40);
+onScroll();
+window.addEventListener('scroll', onScroll, { passive: true });
+
+const mm = document.getElementById('mobileMenu');
+document.getElementById('burger').onclick  = () => mm.classList.add('open');
+document.getElementById('mmClose').onclick = () => mm.classList.remove('open');
+document.querySelectorAll('[data-close]').forEach(a => a.onclick = () => mm.classList.remove('open'));
+</script>
+</body>
+</html>
