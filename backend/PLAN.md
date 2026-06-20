@@ -52,13 +52,13 @@ Request/response schemas, separate from ORM models.
 
 JWT in httpOnly cookies, admin role enforcement.
 
-- [ ] `app/core/security.py` — JWT create/decode, password hashing (passlib bcrypt)
-- [ ] `app/core/dependencies.py` — add `get_current_user`, `require_admin`
-- [ ] `app/services/auth_service.py` — register, login, get current user
-- [ ] `app/routers/auth.py` — `POST /auth/register`, `POST /auth/login`, `POST /auth/logout`, `GET /auth/me`
-- [ ] `app/main.py` — mount auth router
-- [ ] Seed first admin user (CLI command or init script)
-- [ ] Test: register -> login -> access `/auth/me` -> reject without cookie
+- [x] `app/core/security.py` — JWT create/decode, password hashing (bcrypt direct; passlib dropped — unmaintained, breaks on bcrypt ≥4.1)
+- [x] `app/core/dependencies.py` — add `get_current_user`, `require_admin`
+- [x] `app/services/auth_service.py` — register, login, get current user
+- [x] `app/routers/auth.py` — `POST /auth/register`, `POST /auth/login`, `POST /auth/logout`, `GET /auth/me`
+- [x] `app/main.py` — mount auth router
+- [x] Seed first admin user (`python -m app.scripts.seed_admin <email> <password>`)
+- [x] Test: register -> login -> access `/auth/me` -> reject without cookie (+ non-admin 403 guard)
 
 ---
 
@@ -119,6 +119,7 @@ Backend already supports translations from Phase 2. This phase adds:
 - [ ] `app/routers/inquiries.py` — `POST /inquiries` (all anti-spam deps)
 - [ ] `app/routers/admin.py` — add `GET /admin/inquiries`, `PATCH /admin/inquiries/{id}/read`
 - [ ] Alembic migration for `inquiries` table
+- [ ] **Security (deferred from Phase 4):** apply IP rate limiting to `POST /auth/login` and `POST /auth/register` to block credential brute-force (e.g. 5–10 attempts / 15 min)
 
 ---
 
@@ -154,6 +155,7 @@ Backend already supports translations from Phase 2. This phase adds:
 - [ ] `app/routers/subscribers.py` — `POST /subscribe`, `GET /confirm/{token}`, `GET /unsubscribe/{token}`
 - [ ] `app/routers/admin.py` — add `GET /admin/subscribers`, broadcast endpoint
 - [ ] Alembic migration
+- [ ] **Security (deferred from Phase 4):** decide email-verification policy for user registration — `POST /auth/register` currently auto-issues a session with no email confirmation; gate privileged actions (e.g. comments) behind a verified flag if required
 
 ---
 
@@ -196,5 +198,5 @@ Backend already supports translations from Phase 2. This phase adds:
 
 ## Current Status
 
-**Completed:** Phase 1 (skeleton & config), Phase 2 (models & Alembic migration), Phase 3 (Pydantic schemas)
-**Next:** Phase 4 (Auth & admin guard)
+**Completed:** Phase 1 (skeleton & config), Phase 2 (models & Alembic migration), Phase 3 (Pydantic schemas), Phase 4 (auth & admin guard)
+**Next:** Phase 5 (Admin CRUD)

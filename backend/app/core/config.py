@@ -16,6 +16,8 @@ class Settings(BaseSettings):
     # --- Auth ---
     jwt_secret: str
     access_token_expire_minutes: int = 60
+    # → secure cookies require HTTPS; keep False on localhost, True in prod
+    cookie_secure: bool = False
 
     # --- CORS ---
     frontend_origin: str = "http://localhost:3000"

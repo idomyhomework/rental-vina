@@ -19,6 +19,17 @@ class UserCreate(BaseModel):
         return v.strip().lower()
 
 
+# --- Login ---
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str = Field(min_length=8, max_length=128)
+
+    @field_validator("email", mode="before")
+    @classmethod
+    def normalize_email(cls, v: str) -> str:
+        return v.strip().lower()
+
+
 # --- Read ---
 class UserRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
