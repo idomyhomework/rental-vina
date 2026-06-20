@@ -41,10 +41,10 @@ SQLAlchemy 2.0 async models. All entities support translations from day one.
 
 Request/response schemas, separate from ORM models.
 
-- [ ] `app/schemas/user.py` — UserCreate, UserRead, UserUpdate
-- [ ] `app/schemas/property.py` — PropertyCreate, PropertyRead, PropertyUpdate, PropertyList + translation sub-schemas
-- [ ] `app/schemas/amenity.py` — AmenityCreate, AmenityRead + translations
-- [ ] `app/schemas/common.py` — PaginatedResponse, MessageResponse
+- [x] `app/schemas/user.py` — UserCreate, UserRead, UserUpdate
+- [x] `app/schemas/property.py` — PropertyCreate, PropertyRead, PropertyUpdate, PropertyList + translation sub-schemas
+- [x] `app/schemas/amenity.py` — AmenityCreate, AmenityRead + translations
+- [x] `app/schemas/common.py` — PaginatedResponse, MessageResponse
 
 ---
 
@@ -196,5 +196,5 @@ Backend already supports translations from Phase 2. This phase adds:
 
 ## Current Status
 
-**Completed:** Phase 1 (skeleton & config), Phase 2 (models & Alembic migration)
-**Next:** Phase 3 (Pydantic schemas)
+**Completed:** Phase 1 (skeleton & config), Phase 2 (models & Alembic migration), Phase 3 (Pydantic schemas)
+**Next:** Phase 4 (Auth & admin guard)
