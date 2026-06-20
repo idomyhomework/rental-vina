@@ -34,6 +34,19 @@ class Settings(BaseSettings):
     # --- Images ---
     cloudinary_url: str = ""
 
+    @property
+    def async_database_url(self) -> str:
+        # → ensure asyncpg driver prefix and fix sslmode for asyncpg
+        url = self.database_url
+        if url.startswith("postgresql://"):
+            url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
+        # → asyncpg uses "ssl" not "sslmode"
+        url = url.replace("sslmode=require", "ssl=require")
+        url = url.replace("channel_binding=require", "")
+        # → clean up stray "&" or "?" leftovers
+        url = url.replace("?&", "?").replace("&&", "&").rstrip("&").rstrip("?")
+        return url
+
 
 # --- Singleton ---
 settings = Settings()  # type: ignore[call-arg]

@@ -24,16 +24,16 @@ Maps each ROADMAP step to concrete backend tasks. Check off items as they're com
 
 SQLAlchemy 2.0 async models. All entities support translations from day one.
 
-- [ ] `app/models/user.py` — `users` (id, email, hashed_password, role, is_active, created_at)
-- [ ] `app/models/property.py` — `properties` (id, kind: rental|sale, status: draft|published, bedrooms, guests, price_per_night, sale_price, location, lat, lng, created_at, updated_at)
-- [ ] `app/models/property_translation.py` — `property_translations` (property_id, locale, title, slug, description, meta_title, meta_description). Unique on (property_id, locale) and (locale, slug)
-- [ ] `app/models/property_image.py` — `property_images` (property_id, url, public_id, position, is_main)
-- [ ] `app/models/amenity.py` — `amenities` + `amenity_translations` + `property_amenities` join table
-- [ ] `app/models/__init__.py` — re-export all models so Alembic sees them
-- [ ] `alembic.ini` — config pointing at `DATABASE_URL`
-- [ ] `alembic/env.py` — async Alembic env importing `Base.metadata`
-- [ ] Generate first migration: `alembic revision --autogenerate -m "initial"`
-- [ ] Apply to Neon: `alembic upgrade head`
+- [x] `app/models/user.py` — `users` (id, email, hashed_password, role enum, created_at)
+- [x] `app/models/property.py` — `properties` (id, kind enum, status enum, bedrooms, guests, price_per_night, sale_price, location, lat, lng, created_at, updated_at)
+- [x] `app/models/property_translation.py` — `property_translations` (property_id, locale, title, slug, description, meta_title, meta_description). Unique on (property_id, locale) and (locale, slug)
+- [x] `app/models/property_image.py` — `property_images` (property_id, url, public_id, position, is_main)
+- [x] `app/models/amenity.py` — `amenities` + `amenity_translations` + `property_amenities` join table
+- [x] `app/models/__init__.py` — re-export all models so Alembic sees them
+- [x] `alembic.ini` — config pointing at `DATABASE_URL`
+- [x] `alembic/env.py` — async Alembic env importing `Base.metadata`
+- [x] Generate first migration: `alembic revision --autogenerate -m "initial tables"`
+- [x] Apply to Neon: `alembic upgrade head`
 
 ---
 
@@ -196,5 +196,5 @@ Backend already supports translations from Phase 2. This phase adds:
 
 ## Current Status
 
-**Completed:** Phase 1 (skeleton & config)
-**Next:** Phase 2 (models & Alembic migration)
+**Completed:** Phase 1 (skeleton & config), Phase 2 (models & Alembic migration)
+**Next:** Phase 3 (Pydantic schemas)
