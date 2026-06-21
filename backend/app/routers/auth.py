@@ -12,9 +12,11 @@ from app.core.dependencies import (
 from app.core.security import create_access_token
 from app.models.user import User
 from app.schemas.common import MessageResponse
-from app.schemas.user import UserCreate, UserLogin, UserRead
+from app.schemas.user import UserLogin, UserRead
 from app.services import auth_service
 
+# → admin-only auth: there is no public registration; admins are provisioned
+#   via app/scripts/seed_admin.py. Only login/logout/me are exposed.
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
@@ -32,19 +34,6 @@ def _set_auth_cookie(response: Response, user: User) -> None:
         max_age=settings.access_token_expire_minutes * 60,
         path="/",
     )
-
-
-# --- Register ---
-@router.post("/register", response_model=UserRead, status_code=status.HTTP_201_CREATED)
-async def register(
-    payload: UserCreate,
-    response: Response,
-    db: AsyncSession = Depends(get_db),
-) -> User:
-    user = await auth_service.register(db, payload)
-    # → log the new user straight in
-    _set_auth_cookie(response, user)
-    return user
 
 
 # --- Login ---

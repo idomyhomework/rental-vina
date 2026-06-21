@@ -50,15 +50,15 @@ Request/response schemas, separate from ORM models.
 
 ## Phase 4 — Auth & Admin Guard (ROADMAP 1.3)
 
-JWT in httpOnly cookies, admin role enforcement.
+JWT in httpOnly cookies, admin role enforcement. **Admin-only auth — no public registration** (v1 has no public user accounts; testimonials replaced user comments). Admins are provisioned via the seed script.
 
 - [x] `app/core/security.py` — JWT create/decode, password hashing (bcrypt direct; passlib dropped — unmaintained, breaks on bcrypt ≥4.1)
 - [x] `app/core/dependencies.py` — add `get_current_user`, `require_admin`
-- [x] `app/services/auth_service.py` — register, login, get current user
-- [x] `app/routers/auth.py` — `POST /auth/register`, `POST /auth/login`, `POST /auth/logout`, `GET /auth/me`
+- [x] `app/services/auth_service.py` — authenticate, get current user
+- [x] `app/routers/auth.py` — `POST /auth/login`, `POST /auth/logout`, `GET /auth/me` (no `/register`)
 - [x] `app/main.py` — mount auth router
 - [x] Seed first admin user (`python -m app.scripts.seed_admin <email> <password>`)
-- [x] Test: register -> login -> access `/auth/me` -> reject without cookie (+ non-admin 403 guard)
+- [x] Test: login -> access `/auth/me` -> reject without cookie (+ non-admin 403 guard)
 
 ---
 
@@ -119,7 +119,7 @@ Backend already supports translations from Phase 2. This phase adds:
 - [ ] `app/routers/inquiries.py` — `POST /inquiries` (all anti-spam deps)
 - [ ] `app/routers/admin.py` — add `GET /admin/inquiries`, `PATCH /admin/inquiries/{id}/read`
 - [ ] Alembic migration for `inquiries` table
-- [ ] **Security (deferred from Phase 4):** apply IP rate limiting to `POST /auth/login` and `POST /auth/register` to block credential brute-force (e.g. 5–10 attempts / 15 min)
+- [ ] **Security (deferred from Phase 4):** apply IP rate limiting to `POST /auth/login` (admin login) to block credential brute-force (e.g. 5–10 attempts / 15 min)
 
 ---
 
@@ -135,14 +135,21 @@ Backend already supports translations from Phase 2. This phase adds:
 
 ---
 
-## Phase 10 — User Accounts + Comments (ROADMAP 6)
+## Phase 10 — Testimonials (admin-managed) (ROADMAP 6)
 
-- [ ] `app/models/comment.py` — `comments` (user_id, property_id, text, rating 1-5, status: pending|approved|rejected, created_at)
-- [ ] `app/schemas/comment.py` — CommentCreate, CommentRead
-- [ ] `app/services/comment_service.py` — create (requires auth), moderate, aggregate rating
-- [ ] `app/routers/comments.py` — `POST /comments` (auth + anti-spam), `GET /properties/{id}/comments` (approved only)
-- [ ] `app/routers/admin.py` — add `GET /admin/comments`, `PATCH /admin/comments/{id}` (approve/reject)
+Owner-curated guest testimonials — **no public accounts, no public submission, no moderation queue.** The admin enters real testimonials gathered off-site (WhatsApp, email, Google/Booking) and chooses what to publish. Replaces the original user-generated comments system (dropped for v1: cold-start, spam surface, EU Omnibus review-authenticity rules, and GDPR cost of public accounts).
+
+- [ ] `app/models/testimonial.py` — `testimonials` (id, property_id **nullable** → null = site-wide/featured, author_name, author_location nullable, rating 1-5 nullable, quote, source enum: direct|google|booking|other nullable, status: draft|published, position, stay_date nullable, created_at)
+  - → publish **genuine** testimonials only (Google policy + EU Omnibus Directive: published reviews must be real and verifiable)
+- [ ] `app/schemas/testimonial.py` — TestimonialCreate, TestimonialUpdate, TestimonialRead
+- [ ] `app/services/testimonial_service.py` — CRUD + aggregate rating per property
+  - → `rating_avg = AVG(rating)` and `rating_count = COUNT(*)` over **published** testimonials for that property
+  - → feeds `AggregateRating` JSON-LD; **only emit when `rating_count > 0`** (never fake an empty/invented rating)
+- [ ] `app/routers/testimonials.py` — `GET /properties/{id}/testimonials` (published only), `GET /testimonials/featured` (site-wide published)
+- [ ] `app/routers/admin.py` — add testimonial CRUD: `GET/POST /admin/testimonials`, `PATCH/DELETE /admin/testimonials/{id}` (edit, set status/position)
+- [ ] `app/services/property_service.py` — include `rating_avg` + `rating_count` on property read (cards, detail, JSON-LD)
 - [ ] Alembic migration
+- [ ] (Optional, defer) `testimonial_translations` if quotes must be shown per-locale; default v1 stores the quote in its original language for authenticity
 
 ---
 
@@ -155,7 +162,8 @@ Backend already supports translations from Phase 2. This phase adds:
 - [ ] `app/routers/subscribers.py` — `POST /subscribe`, `GET /confirm/{token}`, `GET /unsubscribe/{token}`
 - [ ] `app/routers/admin.py` — add `GET /admin/subscribers`, broadcast endpoint
 - [ ] Alembic migration
-- [ ] **Security (deferred from Phase 4):** decide email-verification policy for user registration — `POST /auth/register` currently auto-issues a session with no email confirmation; gate privileged actions (e.g. comments) behind a verified flag if required
+
+> Note: newsletter subscribers are **not** user accounts — they're email-only records with their own double opt-in (pending → confirmed). v1 has no public user registration, so there is no user email-verification flow.
 
 ---
 
