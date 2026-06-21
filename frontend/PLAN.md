@@ -22,10 +22,10 @@ Maps each ROADMAP step to concrete frontend tasks. Check off items as they're co
 
 **Goal:** Install all dependencies, configure tools, create the folder structure.
 
-- [ ] Install core dependencies:
+- [x] Install core dependencies:
   - `pnpm add next-intl @tanstack/react-query zod react-hook-form @hookform/resolvers clsx tailwind-merge`
   - `pnpm add -D @tailwindcss/forms @tailwindcss/typography`
-- [ ] Create folder structure:
+- [x] Create folder structure:
   ```
   src/
   ├── app/
@@ -51,13 +51,13 @@ Maps each ROADMAP step to concrete frontend tasks. Check off items as they're co
   ├── types/
   └── styles/globals.css
   ```
-- [ ] Move root layout to `src/app/[locale]/layout.tsx` (locale-aware). Keep root `src/app/layout.tsx` as a thin wrapper.
-- [ ] Create `src/app/providers.tsx` — `"use client"` wrapper with `QueryClientProvider` (TanStack Query)
-- [ ] Create `src/lib/api/client.ts` — typed fetch wrapper for FastAPI. Two flavors: Server Components (cookie forwarding) and Client Components.
-- [ ] Create `src/utils/cn.ts` — `clsx` + `tailwind-merge` helper
-- [ ] Create `.env` (gitignored) + `.env.example` with `NEXT_PUBLIC_API_BASE_URL`, `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `NEXT_PUBLIC_SITE_URL`
-- [ ] Update `tailwind.config.js` — add `@tailwindcss/forms` and `@tailwindcss/typography` plugins
-- [ ] Verify: `pnpm dev` starts without errors
+- [x] Move root layout to `src/app/[locale]/layout.tsx` (locale-aware). Keep root `src/app/layout.tsx` as a thin wrapper.
+- [x] Create `src/app/providers.tsx` — `"use client"` wrapper with `QueryClientProvider` (TanStack Query)
+- [x] Create `src/lib/api/client.ts` — typed fetch wrapper for FastAPI. Two flavors: Server Components (cookie forwarding) and Client Components.
+- [x] Create `src/utils/cn.ts` — `clsx` + `tailwind-merge` helper
+- [x] Create `.env` (gitignored) + `.env.example` with `NEXT_PUBLIC_API_BASE_URL`, `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `NEXT_PUBLIC_SITE_URL`
+- [x] Update `tailwind.config.js` — add `@tailwindcss/forms` and `@tailwindcss/typography` plugins
+- [x] Verify: `pnpm build` passes without errors
 
 ---
 

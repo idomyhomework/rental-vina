@@ -1,0 +1,13 @@
+{
+  "common": {
+    "siteName": "Alquileres Vinaròs",
+    "loading": "Cargando...",
+    "error": "Se produjo un error",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "back": "Volver",
+    "search": "Buscar"
+  }
+}

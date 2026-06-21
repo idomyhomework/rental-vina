@@ -1,0 +1,13 @@
+{
+  "common": {
+    "siteName": "Vinaròs Rentals",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "search": "Search"
+  }
+}
