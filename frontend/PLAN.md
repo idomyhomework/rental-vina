@@ -67,13 +67,14 @@ Maps each ROADMAP step to concrete frontend tasks. Check off items as they're co
 
 **Depends on backend:** Phase 4 (Auth + admin guard) — `POST /auth/login`, `GET /auth/me`, `POST /auth/logout`.
 
-- [ ] Create `src/context/AuthContext.tsx` — `"use client"` Context holding user state (email, role, isAdmin). Exposes `login()`, `logout()`, `user`, `isLoading`.
-- [ ] Create `src/features/auth/components/LoginForm.tsx` — `"use client"`. Email + password form with `react-hook-form` + `zod`. Calls `POST /auth/login`.
-- [ ] Create admin login page: `src/app/[locale]/(admin)/admin/login/page.tsx`
-- [ ] Create admin layout: `src/app/[locale]/(admin)/admin/layout.tsx` — sidebar nav (Russian labels: Объекты, Запросы, Комментарии, Подписчики, Блог), top bar with user + logout.
-- [ ] Create admin dashboard: `src/app/[locale]/(admin)/admin/page.tsx` — stats placeholder
-- [ ] Create `middleware.ts` — intercepts `/*/admin/*` routes, checks auth cookie, redirects to login if missing
-- [ ] Build basic UI components: `Button`, `Input`, `Card`
+- [x] Create `src/context/AuthContext.tsx` — `"use client"` Context holding user state (email, role, isAdmin). Exposes `login()`, `logout()`, `user`, `isLoading`.
+- [x] Create `src/features/auth/components/LoginForm.tsx` — `"use client"`. Email + password form with `react-hook-form` + `zod`. Calls `POST /auth/login`.
+- [x] Create admin login page: `src/app/[locale]/(admin)/admin/login/page.tsx`
+- [x] Create admin layout: `src/app/[locale]/(admin)/admin/layout.tsx` — sidebar nav (Russian labels: Объекты, Запросы, Комментарии, Подписчики, Блог), top bar with user + logout.
+- [x] Create admin dashboard: `src/app/[locale]/(admin)/admin/page.tsx` — stats placeholder
+- [x] Update `proxy.ts` — intercepts `/*/admin/*` routes, checks auth cookie, redirects to login if missing
+- [x] Build basic UI components: `Button`, `Input`, `Card`
+- [x] Create `src/types/user.ts` — User, UserRole, LoginCredentials types
 
 ---
 

@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
+import { Fraunces, Inter } from "next/font/google";
 
 import "../globals.css";
 
@@ -15,7 +15,7 @@ type Locale = (typeof locales)[number];
 
 // --- Fonts ---
 
-// → display only — headlines; variable weight keeps bundle small
+// → display only — headlines; serif contrast against Inter body
 const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
@@ -23,10 +23,10 @@ const fraunces = Fraunces({
   display: "swap",
 });
 
-const plusJakartaSans = Plus_Jakarta_Sans({
-  variable: "--font-plus-jakarta-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+// → body/UI — closest open-source substitute for Airbnb Cereal VF
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin", "cyrillic"],
   display: "swap",
 });
 
@@ -59,7 +59,7 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale}
-      className={`${fraunces.variable} ${plusJakartaSans.variable} h-full antialiased`}
+      className={`${fraunces.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-sand text-ink">
         <NextIntlClientProvider messages={messages}>

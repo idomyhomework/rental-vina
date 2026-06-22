@@ -43,6 +43,8 @@ async function request<T>(
 
   const headers: HeadersInit = {
     "Content-Type": "application/json",
+    // → triggers CORS preflight on cross-origin requests, blocking CSRF
+    "X-Requested-With": "XMLHttpRequest",
     ...customHeaders,
   };
 
