@@ -95,6 +95,32 @@ export const api = {
 
   delete: <T>(path: string, options?: RequestOptions) =>
     request<T>(path, { ...options, method: "DELETE" }),
+
+  // → multipart/form-data upload — browser sets Content-Type with boundary
+  upload: async <T>(path: string, formData: FormData): Promise<T> => {
+    const response = await fetch(`${API_BASE_URL}${path}`, {
+      method: "POST",
+      headers: { "X-Requested-With": "XMLHttpRequest" },
+      body: formData,
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      let detail: unknown;
+      try {
+        detail = await response.json();
+      } catch {
+        // → response body may not be JSON
+      }
+      throw new ApiRequestError({
+        status: response.status,
+        message: `API error: ${response.status} ${response.statusText}`,
+        detail,
+      });
+    }
+
+    return response.json() as Promise<T>;
+  },
 };
 
 // --- Server-side API (Server Components, cookie forwarding) ---

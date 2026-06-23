@@ -6,11 +6,12 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Fraunces, Inter } from "next/font/google";
 
+import { Providers } from "../providers";
 import "../globals.css";
 
 // --- Supported locales ---
 
-const locales = ["ru", "es", "en", "uk"] as const;
+const locales = ["ru", "es", "en", "ua"] as const;
 type Locale = (typeof locales)[number];
 
 // --- Fonts ---
@@ -62,9 +63,11 @@ export default async function LocaleLayout({
       className={`${fraunces.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-sand text-ink">
-        <NextIntlClientProvider messages={messages}>
-          {children}
-        </NextIntlClientProvider>
+        <Providers>
+          <NextIntlClientProvider messages={messages}>
+            {children}
+          </NextIntlClientProvider>
+        </Providers>
       </body>
     </html>
   );

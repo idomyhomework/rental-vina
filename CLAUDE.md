@@ -69,7 +69,7 @@ Next.js (React+TS, App Router)  ──HTTP/JSON──▶  FastAPI (async)  ─�
 
 ### i18n
 
-- **next-intl** with a `[locale]` route segment. Locales: `ru` (default), `es`, `en`, `uk`. Middleware handles locale routing.
+- **next-intl** with a `[locale]` route segment. Locales: `ru` (default), `es`, `en`, `ua`. Middleware handles locale routing.
 - **UI strings** live in `src/messages/{locale}.json`.
 - **Content** (property titles, descriptions, slugs, blog) is translated in the database, not in catalogs — fetch the right locale from the API.
 - Emit `hreflang` alternates for all 4 locales **+ `x-default`** on every page.
@@ -194,7 +194,7 @@ root/
 │   │   │   ├── api/                 # typed fetch client → FastAPI (client + server)
 │   │   │   └── seo/                 # metadata / JSON-LD builders
 │   │   ├── i18n/                    # next-intl config
-│   │   ├── messages/               # es/ru/en/uk.json
+│   │   ├── messages/               # es/ru/en/ua.json
 │   │   ├── utils/                   # pure helpers
 │   │   ├── types/                   # global types
 │   │   └── styles/globals.css       # Tailwind base only
@@ -242,6 +242,7 @@ root/
 - **Colors:** `ink #211E1B`, `sand #FBF7F2`, `sea #0E6B73`, `coral #EA5A41` (accent), `coral-dark #C8462E`, `coral-soft #FCEBE5`, `line #ECE5DC`.
 - **Fonts:** display **Fraunces** (headlines only), body/UI **Plus Jakarta Sans** (load via `next/font`).
 - **Components:** rounded photo cards w/ hover zoom, location pill, save-heart, icon meta (guests/bedrooms), "from X€/night" price, long-stay badge.
+- **Icons:** use **lucide-react** (`import { IconName } from "lucide-react"`). **Never use emoji characters** in code, UI, or component data — always use Lucide icon components instead.
 - Accessibility floor: visible focus states, reduced-motion respected, alt text, keyboard-navigable calendar and forms. Tap targets ≥44px.
 
 ---

@@ -5,7 +5,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-SUPPORTED_LOCALES = Literal["ru", "es", "en", "uk"]
+SUPPORTED_LOCALES = Literal["ru", "es", "en", "ua"]
 
 
 # --- Translation sub-schemas ---

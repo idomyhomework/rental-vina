@@ -6,15 +6,15 @@ Maps each ROADMAP step to concrete frontend tasks. Check off items as they're co
 
 ## Key Concepts for a Next.js Beginner
 
-| Concept | What it means |
-|---|---|
-| **App Router** | Files inside `src/app/` become URL routes automatically. `src/app/about/page.tsx` = `/about` |
-| **Server Component** | Default in Next.js. Runs on the server, can `await fetch()`, good for SEO. Cannot use `useState`, `onClick`, etc. |
-| **Client Component** | Add `"use client"` at top. Runs in browser. Needed for interactivity (forms, buttons, state). |
-| **Layout** | `layout.tsx` wraps all pages in its folder. Root layout wraps the entire app. |
-| **`[param]`** | Dynamic route segment. `[locale]` in the folder name means the URL locale (es, ru, en, uk) is passed as a param. |
-| **`(group)`** | Route group — organizes files without affecting the URL. `(public)` and `(admin)` share the layout but keep code separate. |
-| **Middleware** | `middleware.ts` runs before every request. We use it for locale detection + admin auth guard. |
+| Concept              | What it means                                                                                                              |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| **App Router**       | Files inside `src/app/` become URL routes automatically. `src/app/about/page.tsx` = `/about`                               |
+| **Server Component** | Default in Next.js. Runs on the server, can `await fetch()`, good for SEO. Cannot use `useState`, `onClick`, etc.          |
+| **Client Component** | Add `"use client"` at top. Runs in browser. Needed for interactivity (forms, buttons, state).                              |
+| **Layout**           | `layout.tsx` wraps all pages in its folder. Root layout wraps the entire app.                                              |
+| **`[param]`**        | Dynamic route segment. `[locale]` in the folder name means the URL locale (es, ru, en, uk) is passed as a param.           |
+| **`(group)`**        | Route group — organizes files without affecting the URL. `(public)` and `(admin)` share the layout but keep code separate. |
+| **Middleware**       | `middleware.ts` runs before every request. We use it for locale detection + admin auth guard.                              |
 
 ---
 
@@ -84,16 +84,16 @@ Maps each ROADMAP step to concrete frontend tasks. Check off items as they're co
 
 **Depends on backend:** Phase 5 (Admin CRUD endpoints).
 
-- [ ] Create TanStack Query hooks in `src/features/admin/hooks/`:
+- [x] Create TanStack Query hooks in `src/features/admin/hooks/`:
   - `useProperties()`, `useProperty(id)`, `useCreateProperty()`, `useUpdateProperty()`, `useDeleteProperty()`
   - `useUploadImages()`, `useAmenities()`, `useCreateAmenity()`
-- [ ] Admin pages:
+- [x] Admin pages:
   - `admin/properties/page.tsx` — table with status badge, edit/delete actions
   - `admin/properties/new/page.tsx` — create form (all fields, RU translation tab)
   - `admin/properties/[id]/edit/page.tsx` — edit form, image upload/reorder
   - `admin/amenities/page.tsx` — amenity management
-- [ ] Build UI components: `Table`, `Badge`, `ImageUploader`, `Tabs`, `Select`, `Textarea`, `Modal`/`Dialog`
-- [ ] Verify: can create, edit, list, delete a property through admin UI
+- [x] Build UI components: `Table`, `Badge`, `ImageUploader`, `Tabs`, `Select`, `Textarea`, `Modal`/`Dialog`
+- [x] Verify: can create, edit, list, delete a property through admin UI
 
 ---
 
@@ -216,31 +216,31 @@ Maps each ROADMAP step to concrete frontend tasks. Check off items as they're co
 
 ## Risks
 
-| Risk | Likelihood | Mitigation |
-|---|---|---|
-| Next.js 16 has breaking API changes vs docs | High | Read `node_modules/next/dist/docs/` before writing code |
-| Backend not ready when frontend phase needs it | Medium | Build UI with mock data first, wire to real API when backend catches up |
-| i18n adds complexity to every page | Medium | Start without i18n (admin), add to public pages in a single focused phase |
-| Image-heavy site hurts performance | Medium | Cloudinary transforms + next/image from the start |
+| Risk                                           | Likelihood | Mitigation                                                                |
+| ---------------------------------------------- | ---------- | ------------------------------------------------------------------------- |
+| Next.js 16 has breaking API changes vs docs    | High       | Read `node_modules/next/dist/docs/` before writing code                   |
+| Backend not ready when frontend phase needs it | Medium     | Build UI with mock data first, wire to real API when backend catches up   |
+| i18n adds complexity to every page             | Medium     | Start without i18n (admin), add to public pages in a single focused phase |
+| Image-heavy site hurts performance             | Medium     | Cloudinary transforms + next/image from the start                         |
 
 ---
 
 ## Build Order Summary
 
-| Phase | ROADMAP | Backend Dependency | Core Concept |
-|---|---|---|---|
-| F1 Setup | 1.1 | Phase 1 (health) | Folder structure, dependencies |
-| F2 Admin auth | 1.3 | Phase 4 (auth) | JWT cookies, middleware, Context |
-| F3 Admin CRUD | 1.4 | Phase 5 (admin CRUD) | TanStack Query, forms, uploads |
-| F4 Public pages | 2 | Phase 6 (public endpoints) | Server Components, SSR, URL filters |
-| F5 i18n | 3 | — | next-intl, hreflang, locale routing |
-| F6 Forms + spam | 4 | Phase 8 (inquiries) | Turnstile, honeypot, react-hook-form |
-| F7 Calendar | 5 | Phase 9 (availability) | react-day-picker, date ranges |
-| F8 Users + comments | 6 | Phase 10 (comments) | User auth flow, star ratings |
-| F9 Subscriptions | 7 | Phase 11 (subscribers) | Double opt-in UX |
-| F10 Blog | 8 | Phase 12 (posts) | MDX rendering |
-| F11 SEO | 8 | — | Metadata, JSON-LD, sitemap |
-| F12 GDPR + launch | 9-10 | — | Legal compliance, deployment |
+| Phase               | ROADMAP | Backend Dependency         | Core Concept                         |
+| ------------------- | ------- | -------------------------- | ------------------------------------ |
+| F1 Setup            | 1.1     | Phase 1 (health)           | Folder structure, dependencies       |
+| F2 Admin auth       | 1.3     | Phase 4 (auth)             | JWT cookies, middleware, Context     |
+| F3 Admin CRUD       | 1.4     | Phase 5 (admin CRUD)       | TanStack Query, forms, uploads       |
+| F4 Public pages     | 2       | Phase 6 (public endpoints) | Server Components, SSR, URL filters  |
+| F5 i18n             | 3       | —                          | next-intl, hreflang, locale routing  |
+| F6 Forms + spam     | 4       | Phase 8 (inquiries)        | Turnstile, honeypot, react-hook-form |
+| F7 Calendar         | 5       | Phase 9 (availability)     | react-day-picker, date ranges        |
+| F8 Users + comments | 6       | Phase 10 (comments)        | User auth flow, star ratings         |
+| F9 Subscriptions    | 7       | Phase 11 (subscribers)     | Double opt-in UX                     |
+| F10 Blog            | 8       | Phase 12 (posts)           | MDX rendering                        |
+| F11 SEO             | 8       | —                          | Metadata, JSON-LD, sitemap           |
+| F12 GDPR + launch   | 9-10    | —                          | Legal compliance, deployment         |
 
 ---
 

@@ -2,15 +2,17 @@
 
 "use client";
 
+import { Home, Inbox, MessageCircle, Mail, type LucideIcon } from "lucide-react";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 
 // --- Stat card data (placeholder) ---
 
-const stats = [
-  { label: "Объекты", value: "—", icon: "🏠" },
-  { label: "Запросы", value: "—", icon: "📩" },
-  { label: "Комментарии", value: "—", icon: "💬" },
-  { label: "Подписчики", value: "—", icon: "📧" },
+const stats: { label: string; value: string; icon: LucideIcon }[] = [
+  { label: "Объекты", value: "—", icon: Home },
+  { label: "Запросы", value: "—", icon: Inbox },
+  { label: "Комментарии", value: "—", icon: MessageCircle },
+  { label: "Подписчики", value: "—", icon: Mail },
 ];
 
 // --- Page ---
@@ -29,9 +31,7 @@ export default function AdminDashboardPage() {
           <Card key={stat.label} className="p-5">
             <CardHeader className="mb-3">
               <div className="flex items-center gap-2.5">
-                <span className="text-xl" aria-hidden="true">
-                  {stat.icon}
-                </span>
+                <stat.icon className="h-5 w-5 text-sea" aria-hidden="true" />
                 <CardTitle className="text-sm font-medium text-muted">
                   {stat.label}
                 </CardTitle>

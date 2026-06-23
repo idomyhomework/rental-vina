@@ -5,6 +5,17 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import {
+  BarChart3,
+  Home,
+  MapPin,
+  Sparkles,
+  Inbox,
+  MessageCircle,
+  Mail,
+  FileText,
+  type LucideIcon,
+} from "lucide-react";
 
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/Button";
@@ -12,13 +23,15 @@ import { cn } from "@/utils/cn";
 
 // --- Sidebar navigation items (Russian-only) ---
 
-const navItems = [
-  { href: "/ru/admin", label: "Главная", icon: "📊" },
-  { href: "/ru/admin/properties", label: "Объекты", icon: "🏠" },
-  { href: "/ru/admin/inquiries", label: "Запросы", icon: "📩" },
-  { href: "/ru/admin/comments", label: "Комментарии", icon: "💬" },
-  { href: "/ru/admin/subscribers", label: "Подписчики", icon: "📧" },
-  { href: "/ru/admin/posts", label: "Блог", icon: "📝" },
+const navItems: { href: string; label: string; icon: LucideIcon }[] = [
+  { href: "/ru/admin", label: "Главная", icon: BarChart3 },
+  { href: "/ru/admin/properties", label: "Объекты", icon: Home },
+  { href: "/ru/admin/locations", label: "Локации", icon: MapPin },
+  { href: "/ru/admin/amenities", label: "Удобства", icon: Sparkles },
+  { href: "/ru/admin/inquiries", label: "Запросы", icon: Inbox },
+  { href: "/ru/admin/comments", label: "Комментарии", icon: MessageCircle },
+  { href: "/ru/admin/subscribers", label: "Подписчики", icon: Mail },
+  { href: "/ru/admin/posts", label: "Блог", icon: FileText },
 ];
 
 // --- Auth guard wrapper ---
@@ -130,9 +143,7 @@ function SidebarContent({
                   : "text-muted hover:bg-surface-soft hover:text-ink",
               )}
             >
-              <span className="text-base" aria-hidden="true">
-                {item.icon}
-              </span>
+              <item.icon className="h-4 w-4 shrink-0" aria-hidden="true" />
               {item.label}
             </Link>
           );

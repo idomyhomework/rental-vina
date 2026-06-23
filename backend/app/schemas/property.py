@@ -11,7 +11,7 @@ from app.models.property import PropertyKind, PropertyStatus
 from app.schemas.amenity import AmenityRead
 from app.schemas.location import LocationRead
 
-SUPPORTED_LOCALES = Literal["ru", "es", "en", "uk"]
+SUPPORTED_LOCALES = Literal["ru", "es", "en", "ua"]
 
 
 # --- Translation sub-schemas ---
