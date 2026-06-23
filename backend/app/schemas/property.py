@@ -108,6 +108,7 @@ class PropertyReadAdmin(BaseModel):
     price_per_night: Decimal | None = None
     sale_price: int | None = None
     sale_price_discounted: int | None = None
+    location_id: uuid.UUID | None = None
     location: LocationRead | None = None
     lat: float | None = None
     lng: float | None = None

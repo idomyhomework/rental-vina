@@ -85,6 +85,7 @@ function LocationFields({
       <Input
         id="slug"
         label="Slug (URL)"
+        required
         placeholder="vinaros-center"
         error={form.formState.errors.slug?.message}
         {...form.register("slug")}
@@ -94,6 +95,7 @@ function LocationFields({
           key={locale}
           id={`name_${locale}`}
           label={`Название (${LOCALE_LABELS[locale]})`}
+          required={locale === "ru"}
           error={
             form.formState.errors[
               `name_${locale}` as keyof LocationFormData

@@ -140,6 +140,13 @@ export function PropertyForm({
 
   const kind = watch("kind");
 
+  // → restore location_id after async locations load (uncontrolled select race condition)
+  useEffect(() => {
+    if (defaultValues?.location_id && locations.length > 0) {
+      setValue("location_id", defaultValues.location_id);
+    }
+  }, [locations, defaultValues, setValue]);
+
   // --- Auto-slug from title ---
 
   const watchedTranslations = watch("translations");
@@ -176,7 +183,7 @@ export function PropertyForm({
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* --- Basic fields --- */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Select id="kind" label="Тип" error={errors.kind?.message} {...register("kind")}>
+        <Select id="kind" label="Тип" required error={errors.kind?.message} {...register("kind")}>
           <option value="rental">Аренда</option>
           <option value="sale">Продажа</option>
         </Select>
@@ -373,12 +380,14 @@ export function PropertyForm({
                   <Input
                     id={`title-${field.locale}`}
                     label="Заголовок"
+                    required
                     error={errors.translations?.[index]?.title?.message}
                     {...register(`translations.${index}.title`)}
                   />
                   <Input
                     id={`slug-${field.locale}`}
                     label="URL-slug"
+                    required
                     error={errors.translations?.[index]?.slug?.message}
                     {...register(`translations.${index}.slug`)}
                   />

@@ -93,6 +93,7 @@ function AmenityFields({
           key={locale}
           id={`name_${locale}`}
           label={`Название (${LOCALE_LABELS[locale]})`}
+          required={locale === "ru"}
           error={
             form.formState.errors[
               `name_${locale}` as keyof AmenityFormData
