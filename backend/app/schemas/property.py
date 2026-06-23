@@ -153,3 +153,9 @@ class PropertyList(BaseModel):
     slug: str | None = None
     description: str | None = None
     main_image_url: str | None = None
+
+
+# --- Image reorder request ---
+class ImageReorder(BaseModel):
+    ordered_ids: list[uuid.UUID] = Field(min_length=1, max_length=100)
+    main_image_id: uuid.UUID | None = None

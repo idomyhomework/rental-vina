@@ -66,22 +66,23 @@ JWT in httpOnly cookies, admin role enforcement. **Admin-only auth — no public
 
 Full create/read/update/delete for properties and amenities behind `require_admin`.
 
-- [ ] `app/services/property_service.py` — CRUD + image management + translation upsert
-- [ ] `app/services/amenity_service.py` — CRUD + translations
-- [ ] `app/routers/admin.py` — admin-only router prefix `/admin`
-  - [ ] `POST /admin/properties` — create property with translations
-  - [ ] `GET /admin/properties` — list all (drafts + published)
-  - [ ] `GET /admin/properties/{id}` — detail with translations + images
-  - [ ] `PATCH /admin/properties/{id}` — update property + translations
-  - [ ] `DELETE /admin/properties/{id}` — soft delete or remove
-  - [ ] `POST /admin/properties/{id}/images` — upload (Cloudinary)
-  - [ ] `PATCH /admin/properties/{id}/images` — reorder, set main
-  - [ ] `DELETE /admin/properties/{id}/images/{image_id}` — remove
-  - [ ] `GET /admin/amenities` — list
-  - [ ] `POST /admin/amenities` — create with translations
-  - [ ] `PATCH /admin/amenities/{id}` — update
-  - [ ] `DELETE /admin/amenities/{id}` — remove
-- [ ] `app/main.py` — mount admin router
+- [x] `app/services/property_service.py` — CRUD + image management + translation upsert
+- [x] `app/services/amenity_service.py` — CRUD + translations
+- [x] `app/services/cloudinary_service.py` — upload/delete images via Cloudinary SDK
+- [x] `app/routers/admin.py` — admin-only router prefix `/admin`
+  - [x] `POST /admin/properties` — create property with translations
+  - [x] `GET /admin/properties` — list all (drafts + published)
+  - [x] `GET /admin/properties/{id}` — detail with translations + images
+  - [x] `PATCH /admin/properties/{id}` — update property + translations
+  - [x] `DELETE /admin/properties/{id}` — delete (cascade + Cloudinary cleanup)
+  - [x] `POST /admin/properties/{id}/images` — upload (Cloudinary)
+  - [x] `PATCH /admin/properties/{id}/images` — reorder, set main
+  - [x] `DELETE /admin/properties/{id}/images/{image_id}` — remove
+  - [x] `GET /admin/amenities` — list
+  - [x] `POST /admin/amenities` — create with translations
+  - [x] `PATCH /admin/amenities/{id}` — update
+  - [x] `DELETE /admin/amenities/{id}` — remove
+- [x] `app/main.py` — mount admin router
 
 ---
 
@@ -206,5 +207,5 @@ Owner-curated guest testimonials — **no public accounts, no public submission,
 
 ## Current Status
 
-**Completed:** Phase 1 (skeleton & config), Phase 2 (models & Alembic migration), Phase 3 (Pydantic schemas), Phase 4 (auth & admin guard)
-**Next:** Phase 5 (Admin CRUD)
+**Completed:** Phase 1 (skeleton & config), Phase 2 (models & Alembic migration), Phase 3 (Pydantic schemas), Phase 4 (auth & admin guard), Phase 5 (Admin CRUD)
+**Next:** Phase 6 (Public Read Endpoints)
