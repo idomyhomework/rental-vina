@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from app.models.property import PropertyKind, PropertyStatus
 from app.schemas.amenity import AmenityRead
+from app.schemas.location import LocationRead
 
 SUPPORTED_LOCALES = Literal["ru", "es", "en", "uk"]
 
@@ -62,10 +63,9 @@ class PropertyCreate(BaseModel):
     price_per_night: Decimal | None = Field(
         default=None, ge=0, le=Decimal("99999999.99"), decimal_places=2
     )
-    sale_price: Decimal | None = Field(
-        default=None, ge=0, le=Decimal("9999999999.99"), decimal_places=2
-    )
-    location: str | None = Field(default=None, max_length=200)
+    sale_price: int | None = Field(default=None, ge=0, le=9_999_999_999)
+    sale_price_discounted: int | None = Field(default=None, ge=0, le=9_999_999_999)
+    location_id: uuid.UUID | None = None
     lat: float | None = Field(default=None, ge=-90, le=90)
     lng: float | None = Field(default=None, ge=-180, le=180)
     translations: list[PropertyTranslationIn] = Field(
@@ -84,8 +84,9 @@ class PropertyRead(BaseModel):
     bedrooms: int | None = None
     guests: int | None = None
     price_per_night: Decimal | None = None
-    sale_price: Decimal | None = None
-    location: str | None = None
+    sale_price: int | None = None
+    sale_price_discounted: int | None = None
+    location: LocationRead | None = None
     lat: float | None = None
     lng: float | None = None
     created_at: datetime
@@ -105,8 +106,9 @@ class PropertyReadAdmin(BaseModel):
     bedrooms: int | None = None
     guests: int | None = None
     price_per_night: Decimal | None = None
-    sale_price: Decimal | None = None
-    location: str | None = None
+    sale_price: int | None = None
+    sale_price_discounted: int | None = None
+    location: LocationRead | None = None
     lat: float | None = None
     lng: float | None = None
     created_at: datetime
@@ -125,10 +127,9 @@ class PropertyUpdate(BaseModel):
     price_per_night: Decimal | None = Field(
         default=None, ge=0, le=Decimal("99999999.99"), decimal_places=2
     )
-    sale_price: Decimal | None = Field(
-        default=None, ge=0, le=Decimal("9999999999.99"), decimal_places=2
-    )
-    location: str | None = Field(default=None, max_length=200)
+    sale_price: int | None = Field(default=None, ge=0, le=9_999_999_999)
+    sale_price_discounted: int | None = Field(default=None, ge=0, le=9_999_999_999)
+    location_id: uuid.UUID | None = None
     lat: float | None = Field(default=None, ge=-90, le=90)
     lng: float | None = Field(default=None, ge=-180, le=180)
     translations: list[PropertyTranslationIn] | None = Field(
@@ -146,8 +147,9 @@ class PropertyList(BaseModel):
     bedrooms: int | None = None
     guests: int | None = None
     price_per_night: Decimal | None = None
-    sale_price: Decimal | None = None
-    location: str | None = None
+    sale_price: int | None = None
+    sale_price_discounted: int | None = None
+    location: LocationRead | None = None
     # → single-locale translation inlined for catalog display
     title: str | None = None
     slug: str | None = None

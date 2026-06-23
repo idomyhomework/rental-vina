@@ -70,18 +70,22 @@ Full create/read/update/delete for properties and amenities behind `require_admi
 - [x] `app/services/amenity_service.py` — CRUD + translations
 - [x] `app/services/cloudinary_service.py` — upload/delete images via Cloudinary SDK
 - [x] `app/routers/admin.py` — admin-only router prefix `/admin`
-  - [x] `POST /admin/properties` — create property with translations
-  - [x] `GET /admin/properties` — list all (drafts + published)
-  - [x] `GET /admin/properties/{id}` — detail with translations + images
-  - [x] `PATCH /admin/properties/{id}` — update property + translations
-  - [x] `DELETE /admin/properties/{id}` — delete (cascade + Cloudinary cleanup)
-  - [x] `POST /admin/properties/{id}/images` — upload (Cloudinary)
-  - [x] `PATCH /admin/properties/{id}/images` — reorder, set main
-  - [x] `DELETE /admin/properties/{id}/images/{image_id}` — remove
-  - [x] `GET /admin/amenities` — list
-  - [x] `POST /admin/amenities` — create with translations
-  - [x] `PATCH /admin/amenities/{id}` — update
-  - [x] `DELETE /admin/amenities/{id}` — remove
+- [x] `POST /admin/properties` — create property with translations
+- [x] `GET /admin/properties` — list all (drafts + published)
+- [x] `GET /admin/properties/{id}` — detail with translations + images
+- [x] `PATCH /admin/properties/{id}` — update property + translations
+- [x] `DELETE /admin/properties/{id}` — delete (cascade + Cloudinary cleanup)
+- [x] `POST /admin/properties/{id}/images` — upload (Cloudinary)
+- [x] `PATCH /admin/properties/{id}/images` — reorder, set main
+- [x] `DELETE /admin/properties/{id}/images/{image_id}` — remove
+- [x] `GET /admin/amenities` — list
+- [x] `POST /admin/amenities` — create with translations
+- [x] `PATCH /admin/amenities/{id}` — update
+- [x] `DELETE /admin/amenities/{id}` — remove
+- [x] `GET /admin/location` — list locations
+- [x] `POST /admin/location` — create location
+- [x] `PATCH /admin/location/{id}` — update location
+- [x] `DELETE /admin/location/{id}` — remove location
 - [x] `app/main.py` — mount admin router
 
 ---

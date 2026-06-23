@@ -10,6 +10,7 @@ from app.core.dependencies import get_db, require_admin
 from app.models.property import PropertyKind, PropertyStatus
 from app.schemas.amenity import AmenityCreate, AmenityRead, AmenityUpdate
 from app.schemas.common import MessageResponse, PaginatedResponse
+from app.schemas.location import LocationCreate, LocationRead, LocationUpdate
 from app.schemas.property import (
     ImageReorder,
     PropertyCreate,
@@ -17,7 +18,7 @@ from app.schemas.property import (
     PropertyReadAdmin,
     PropertyUpdate,
 )
-from app.services import amenity_service, cloudinary_service, property_service
+from app.services import amenity_service, cloudinary_service, location_service, property_service
 
 router = APIRouter(
     prefix="/admin",
@@ -235,3 +236,60 @@ async def delete_amenity(
 ) -> MessageResponse:
     await amenity_service.delete(db, amenity_id)
     return MessageResponse(message="Amenity deleted")
+
+
+# ============================================================
+#  Locations
+# ============================================================
+
+
+# --- List locations ---
+@router.get("/locations", response_model=PaginatedResponse[LocationRead])
+async def list_locations(
+    page: int = Query(1, ge=1),
+    limit: int = Query(50, ge=1, le=200),
+    db: AsyncSession = Depends(get_db),
+) -> PaginatedResponse[LocationRead]:
+    items, total = await location_service.list_all(db, page=page, limit=limit)
+    return PaginatedResponse[LocationRead](
+        items=[LocationRead.model_validate(loc) for loc in items],
+        total=total,
+        page=page,
+        limit=limit,
+        pages=math.ceil(total / limit) if total else 0,
+    )
+
+
+# --- Create location ---
+@router.post(
+    "/locations",
+    response_model=LocationRead,
+    status_code=status.HTTP_201_CREATED,
+)
+async def create_location(
+    payload: LocationCreate,
+    db: AsyncSession = Depends(get_db),
+) -> LocationRead:
+    location = await location_service.create(db, payload)
+    return LocationRead.model_validate(location)
+
+
+# --- Update location ---
+@router.patch("/locations/{location_id}", response_model=LocationRead)
+async def update_location(
+    location_id: uuid.UUID,
+    payload: LocationUpdate,
+    db: AsyncSession = Depends(get_db),
+) -> LocationRead:
+    location = await location_service.update(db, location_id, payload)
+    return LocationRead.model_validate(location)
+
+
+# --- Delete location ---
+@router.delete("/locations/{location_id}", response_model=MessageResponse)
+async def delete_location(
+    location_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+) -> MessageResponse:
+    await location_service.delete(db, location_id)
+    return MessageResponse(message="Location deleted")

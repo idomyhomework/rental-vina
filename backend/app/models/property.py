@@ -7,7 +7,7 @@ import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Enum as SAEnum, Integer, Numeric, String, DateTime, Float, func
+from sqlalchemy import Enum as SAEnum, ForeignKey, Integer, Numeric, String, DateTime, Float, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -17,6 +17,7 @@ if TYPE_CHECKING:
     from app.models.property_translation import PropertyTranslation
     from app.models.property_image import PropertyImage
     from app.models.amenity import PropertyAmenity
+    from app.models.location import Location
 
 
 # --- Enums ---
@@ -52,10 +53,18 @@ class Property(Base):
     price_per_night: Mapped[float | None] = mapped_column(
         Numeric(10, 2), nullable=True
     )
-    sale_price: Mapped[float | None] = mapped_column(
-        Numeric(12, 2), nullable=True
+    sale_price: Mapped[int | None] = mapped_column(
+        Numeric(12, 0), nullable=True
     )
-    location: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    sale_price_discounted: Mapped[int | None] = mapped_column(
+        Numeric(12, 0), nullable=True
+    )
+    location_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("locations.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )
     lat: Mapped[float | None] = mapped_column(Float, nullable=True)
     lng: Mapped[float | None] = mapped_column(Float, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
@@ -69,6 +78,9 @@ class Property(Base):
     )
 
     # --- Relationships ---
+    location: Mapped[Location | None] = relationship(
+        back_populates="properties", lazy="selectin"
+    )
     translations: Mapped[list[PropertyTranslation]] = relationship(
         back_populates="property", cascade="all, delete-orphan", lazy="selectin"
     )

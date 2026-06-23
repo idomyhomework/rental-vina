@@ -23,7 +23,8 @@ async def create(db: AsyncSession, payload: PropertyCreate) -> Property:
         guests=payload.guests,
         price_per_night=payload.price_per_night,
         sale_price=payload.sale_price,
-        location=payload.location,
+        sale_price_discounted=payload.sale_price_discounted,
+        location_id=payload.location_id,
         lat=payload.lat,
         lng=payload.lng,
     )
@@ -57,6 +58,7 @@ async def get_by_id(db: AsyncSession, property_id: uuid.UUID) -> Property:
     prop = await db.scalar(
         select(Property)
         .options(
+            selectinload(Property.location),
             selectinload(Property.translations),
             selectinload(Property.images),
             selectinload(Property.amenities).selectinload(PropertyAmenity.amenity),
@@ -81,6 +83,7 @@ async def list_all(
     status_filter: PropertyStatus | None = None,
 ) -> tuple[list[Property], int]:
     query = select(Property).options(
+        selectinload(Property.location),
         selectinload(Property.translations),
         selectinload(Property.images),
     )
@@ -122,7 +125,8 @@ async def update(
         "guests",
         "price_per_night",
         "sale_price",
-        "location",
+        "sale_price_discounted",
+        "location_id",
         "lat",
         "lng",
     }

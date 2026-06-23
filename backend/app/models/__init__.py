@@ -5,6 +5,7 @@ from app.models.property import Property
 from app.models.property_translation import PropertyTranslation
 from app.models.property_image import PropertyImage
 from app.models.amenity import Amenity, AmenityTranslation, PropertyAmenity
+from app.models.location import Location, LocationTranslation
 
 __all__ = [
     "User",
@@ -14,4 +15,6 @@ __all__ = [
     "Amenity",
     "AmenityTranslation",
     "PropertyAmenity",
+    "Location",
+    "LocationTranslation",
 ]
