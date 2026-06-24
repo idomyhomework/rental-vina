@@ -1,6 +1,7 @@
 // --- LOCATIONS — HOOKS (TanStack Query, admin client) ---
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import { api } from "@/lib/api/client";
 import type {
@@ -27,8 +28,11 @@ export function useCreateLocation() {
 
   return useMutation<Location, Error, LocationCreate>({
     mutationFn: (body) => api.post("/admin/locations", body),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["admin-locations"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-locations"] });
+      toast.success("Локация создана");
+    },
+    onError: () => toast.error("Не удалось создать локацию"),
   });
 }
 
@@ -39,8 +43,11 @@ export function useUpdateLocation() {
 
   return useMutation<Location, Error, { id: string; body: LocationUpdate }>({
     mutationFn: ({ id, body }) => api.patch(`/admin/locations/${id}`, body),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["admin-locations"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-locations"] });
+      toast.success("Локация обновлена");
+    },
+    onError: () => toast.error("Не удалось обновить локацию"),
   });
 }
 
@@ -51,7 +58,10 @@ export function useDeleteLocation() {
 
   return useMutation<MessageResponse, Error, string>({
     mutationFn: (id) => api.delete(`/admin/locations/${id}`),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["admin-locations"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-locations"] });
+      toast.success("Локация удалена");
+    },
+    onError: () => toast.error("Не удалось удалить локацию"),
   });
 }

@@ -132,9 +132,13 @@ export default function AdminLocationsPage() {
   });
 
   const handleCreate = async (formData: LocationFormData) => {
-    await createMutation.mutateAsync(toPayload(formData));
-    createForm.reset();
-    setShowCreate(false);
+    try {
+      await createMutation.mutateAsync(toPayload(formData));
+      createForm.reset();
+      setShowCreate(false);
+    } catch {
+      // → toast fires from hook onError; keep modal open so user can retry
+    }
   };
 
   // --- Edit form ---
@@ -150,11 +154,15 @@ export default function AdminLocationsPage() {
 
   const handleEdit = async (formData: LocationFormData) => {
     if (!editLocation) return;
-    await updateMutation.mutateAsync({
-      id: editLocation.id,
-      body: toPayload(formData),
-    });
-    setEditLocation(null);
+    try {
+      await updateMutation.mutateAsync({
+        id: editLocation.id,
+        body: toPayload(formData),
+      });
+      setEditLocation(null);
+    } catch {
+      // → toast fires from hook onError; keep modal open so user can retry
+    }
   };
 
   // --- Delete ---

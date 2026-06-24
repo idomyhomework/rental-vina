@@ -1,6 +1,7 @@
 # --- CLOUDINARY — SERVICE ---
 
 import asyncio
+from urllib.parse import urlparse
 
 import cloudinary
 import cloudinary.uploader
@@ -8,8 +9,24 @@ from fastapi import HTTPException, UploadFile, status
 
 from app.core.config import settings
 
-# → configure once at import time; CLOUDINARY_URL contains everything
-cloudinary.config(cloudinary_url=settings.cloudinary_url or None)
+
+# --- Configure SDK ---
+def _configure() -> None:
+    # → the SDK only auto-parses CLOUDINARY_URL from os.environ; pydantic loads
+    #   it from .env instead, so we parse the URL and pass the parts explicitly
+    if not settings.cloudinary_url:
+        return
+    parsed = urlparse(settings.cloudinary_url)
+    cloudinary.config(
+        cloud_name=parsed.hostname,
+        api_key=parsed.username,
+        api_secret=parsed.password,
+        secure=True,
+    )
+
+
+# → configure once at import time
+_configure()
 
 UPLOAD_FOLDER = "rental-vina/properties"
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB

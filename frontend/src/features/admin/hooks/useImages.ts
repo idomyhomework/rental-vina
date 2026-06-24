@@ -1,6 +1,7 @@
 // --- PROPERTY IMAGES — HOOKS (TanStack Query, admin client) ---
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import { api } from "@/lib/api/client";
 import type { ImageReorder, MessageResponse, PropertyImage } from "../types";
@@ -16,10 +17,13 @@ export function useUploadImages(propertyId: string) {
       files.forEach((file) => formData.append("files", file));
       return api.upload(`/admin/properties/${propertyId}/images`, formData);
     },
-    onSuccess: () =>
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["admin-properties", propertyId],
-      }),
+      });
+      toast.success("Фото загружены");
+    },
+    onError: () => toast.error("Не удалось загрузить фото"),
   });
 }
 
@@ -31,10 +35,13 @@ export function useReorderImages(propertyId: string) {
   return useMutation<PropertyImage[], Error, ImageReorder>({
     mutationFn: (body) =>
       api.patch(`/admin/properties/${propertyId}/images`, body),
-    onSuccess: () =>
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["admin-properties", propertyId],
-      }),
+      });
+      toast.success("Порядок обновлён");
+    },
+    onError: () => toast.error("Не удалось изменить порядок"),
   });
 }
 
@@ -46,9 +53,12 @@ export function useDeleteImage(propertyId: string) {
   return useMutation<MessageResponse, Error, string>({
     mutationFn: (imageId) =>
       api.delete(`/admin/properties/${propertyId}/images/${imageId}`),
-    onSuccess: () =>
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["admin-properties", propertyId],
-      }),
+      });
+      toast.success("Фото удалено");
+    },
+    onError: () => toast.error("Не удалось удалить фото"),
   });
 }

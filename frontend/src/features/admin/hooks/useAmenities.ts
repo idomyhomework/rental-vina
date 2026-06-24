@@ -1,6 +1,7 @@
 // --- AMENITIES — HOOKS (TanStack Query, admin client) ---
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import { api } from "@/lib/api/client";
 import type {
@@ -27,8 +28,11 @@ export function useCreateAmenity() {
 
   return useMutation<Amenity, Error, AmenityCreate>({
     mutationFn: (body) => api.post("/admin/amenities", body),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["admin-amenities"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-amenities"] });
+      toast.success("Удобство добавлено");
+    },
+    onError: () => toast.error("Не удалось добавить удобство"),
   });
 }
 
@@ -39,8 +43,11 @@ export function useUpdateAmenity() {
 
   return useMutation<Amenity, Error, { id: string; body: AmenityUpdate }>({
     mutationFn: ({ id, body }) => api.patch(`/admin/amenities/${id}`, body),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["admin-amenities"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-amenities"] });
+      toast.success("Удобство обновлено");
+    },
+    onError: () => toast.error("Не удалось обновить удобство"),
   });
 }
 
@@ -51,7 +58,10 @@ export function useDeleteAmenity() {
 
   return useMutation<MessageResponse, Error, string>({
     mutationFn: (id) => api.delete(`/admin/amenities/${id}`),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["admin-amenities"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-amenities"] });
+      toast.success("Удобство удалено");
+    },
+    onError: () => toast.error("Не удалось удалить удобство"),
   });
 }

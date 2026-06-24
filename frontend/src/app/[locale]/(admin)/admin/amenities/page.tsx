@@ -130,9 +130,13 @@ export default function AdminAmenitiesPage() {
   });
 
   const handleCreate = async (formData: AmenityFormData) => {
-    await createMutation.mutateAsync(toPayload(formData));
-    createForm.reset();
-    setShowCreate(false);
+    try {
+      await createMutation.mutateAsync(toPayload(formData));
+      createForm.reset();
+      setShowCreate(false);
+    } catch {
+      // → toast fires from hook onError; keep modal open so user can retry
+    }
   };
 
   // --- Edit form ---
@@ -148,11 +152,15 @@ export default function AdminAmenitiesPage() {
 
   const handleEdit = async (formData: AmenityFormData) => {
     if (!editAmenity) return;
-    await updateMutation.mutateAsync({
-      id: editAmenity.id,
-      body: toPayload(formData),
-    });
-    setEditAmenity(null);
+    try {
+      await updateMutation.mutateAsync({
+        id: editAmenity.id,
+        body: toPayload(formData),
+      });
+      setEditAmenity(null);
+    } catch {
+      // → toast fires from hook onError; keep modal open so user can retry
+    }
   };
 
   // --- Delete ---

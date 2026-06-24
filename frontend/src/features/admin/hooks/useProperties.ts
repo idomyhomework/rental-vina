@@ -1,6 +1,7 @@
 // --- PROPERTIES — HOOKS (TanStack Query, admin client) ---
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import { api } from "@/lib/api/client";
 import type {
@@ -47,8 +48,11 @@ export function useCreateProperty() {
 
   return useMutation<Property, Error, PropertyCreate>({
     mutationFn: (body) => api.post("/admin/properties", body),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["admin-properties"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-properties"] });
+      toast.success("Объект создан");
+    },
+    onError: () => toast.error("Не удалось создать объект"),
   });
 }
 
@@ -59,8 +63,11 @@ export function useUpdateProperty(id: string) {
 
   return useMutation<Property, Error, PropertyUpdate>({
     mutationFn: (body) => api.patch(`/admin/properties/${id}`, body),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["admin-properties"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-properties"] });
+      toast.success("Объект обновлён");
+    },
+    onError: () => toast.error("Не удалось обновить объект"),
   });
 }
 
@@ -71,7 +78,10 @@ export function useDeleteProperty() {
 
   return useMutation<MessageResponse, Error, string>({
     mutationFn: (id) => api.delete(`/admin/properties/${id}`),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["admin-properties"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-properties"] });
+      toast.success("Объект удалён");
+    },
+    onError: () => toast.error("Не удалось удалить объект"),
   });
 }
