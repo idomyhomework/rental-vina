@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.routers import admin, auth
+from app.routers import admin, amenities, auth, properties
 
 # --- App instance ---
 app = FastAPI(
@@ -27,6 +27,8 @@ app.add_middleware(
 # --- Routers ---
 app.include_router(auth.router)
 app.include_router(admin.router)
+app.include_router(properties.router)
+app.include_router(amenities.router)
 
 
 # --- Health check ---

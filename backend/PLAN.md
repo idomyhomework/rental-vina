@@ -94,13 +94,16 @@ Full create/read/update/delete for properties and amenities behind `require_admi
 
 Public routes return only `status='published'`, locale-filtered.
 
-- [ ] `app/routers/properties.py`
-  - [ ] `GET /properties?locale=&kind=rental&page=&limit=&bedrooms=&guests=&min_price=&max_price=` — paginated catalog
-  - [ ] `GET /properties/{slug}?locale=` — detail by translated slug
-- [ ] `app/routers/sales.py` — same pattern, `kind=sale`
-- [ ] `app/routers/amenities.py` — `GET /amenities?locale=`
-- [ ] `app/services/property_service.py` — add public query methods (published-only, locale join)
-- [ ] `app/main.py` — mount public routers
+- [x] `app/routers/properties.py`
+  - [x] `GET /properties?locale=&kind=rental&page=&limit=&bedrooms=&guests=&min_price=&max_price=&location_id=` — paginated catalog
+  - [x] `GET /properties/{slug}?locale=` — detail by translated slug
+- [x] `app/routers/properties.py` handles both rental and sale via `kind` query param (no separate `sales.py` needed)
+- [x] `app/routers/amenities.py` — `GET /amenities?locale=`
+- [x] `app/services/property_service.py` — add public query methods (`list_published`, `get_by_slug`)
+- [x] `app/services/amenity_service.py` — add `list_public` (flat, single-locale)
+- [x] `app/schemas/property.py` — add `PropertyDetailPublic` (single-locale public detail)
+- [x] `app/schemas/amenity.py` — add `AmenityPublic` (flat, single-locale)
+- [x] `app/main.py` — mount public routers
 
 ---
 
@@ -211,5 +214,5 @@ Owner-curated guest testimonials — **no public accounts, no public submission,
 
 ## Current Status
 
-**Completed:** Phase 1 (skeleton & config), Phase 2 (models & Alembic migration), Phase 3 (Pydantic schemas), Phase 4 (auth & admin guard), Phase 5 (Admin CRUD)
-**Next:** Phase 6 (Public Read Endpoints)
+**Completed:** Phase 1 (skeleton & config), Phase 2 (models & Alembic migration), Phase 3 (Pydantic schemas), Phase 4 (auth & admin guard), Phase 5 (Admin CRUD), Phase 6 (Public Read Endpoints)
+**Next:** Phase 7 (Internationalization Support)

@@ -39,6 +39,15 @@ class AmenityRead(BaseModel):
     translations: list[AmenityTranslationOut] = []
 
 
+# --- Public (flat, single-locale) ---
+class AmenityPublic(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    icon: str | None = None
+    name: str
+
+
 # --- Update ---
 class AmenityUpdate(BaseModel):
     icon: str | None = Field(default=None, max_length=100, pattern=r"^[a-zA-Z0-9_-]+$")

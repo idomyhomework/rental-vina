@@ -8,7 +8,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.models.property import PropertyKind, PropertyStatus
-from app.schemas.amenity import AmenityRead
+from app.schemas.amenity import AmenityPublic, AmenityRead
 from app.schemas.location import LocationRead
 
 SUPPORTED_LOCALES = Literal["ru", "es", "en", "ua"]
@@ -156,6 +156,32 @@ class PropertyList(BaseModel):
     slug: str | None = None
     description: str | None = None
     main_image_url: str | None = None
+
+
+# --- Read (public detail — single locale, no internal IDs) ---
+class PropertyDetailPublic(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    kind: PropertyKind
+    bedrooms: int | None = None
+    guests: int | None = None
+    price_per_night: Decimal | None = None
+    sale_price: int | None = None
+    sale_price_discounted: int | None = None
+    location: LocationRead | None = None
+    lat: float | None = None
+    lng: float | None = None
+    created_at: datetime
+    updated_at: datetime
+    # → single-locale translation inlined
+    title: str | None = None
+    slug: str | None = None
+    description: str | None = None
+    meta_title: str | None = None
+    meta_description: str | None = None
+    images: list[PropertyImageOut] = []
+    amenities: list[AmenityPublic] = []
 
 
 # --- Image reorder request ---

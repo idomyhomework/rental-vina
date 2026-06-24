@@ -106,6 +106,28 @@ async def update(
     return await get_by_id(db, amenity_id)
 
 
+# --- List public (flat, single-locale) ---
+async def list_public(
+    db: AsyncSession,
+    locale: str = "ru",
+) -> list[dict]:
+    result = await db.scalars(
+        select(Amenity).options(selectinload(Amenity.translations))
+    )
+    items: list[dict] = []
+    for amenity in result.all():
+        name_trans = next(
+            (t for t in amenity.translations if t.locale == locale), None
+        )
+        if name_trans:
+            items.append({
+                "id": amenity.id,
+                "icon": amenity.icon,
+                "name": name_trans.name,
+            })
+    return items
+
+
 # --- Delete ---
 async def delete(db: AsyncSession, amenity_id: uuid.UUID) -> None:
     amenity = await db.get(Amenity, amenity_id)

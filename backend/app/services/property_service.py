@@ -1,13 +1,14 @@
 # --- PROPERTY — SERVICE ---
 
 import uuid
+from decimal import Decimal
 
 from fastapi import HTTPException, status
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.models.amenity import PropertyAmenity
+from app.models.amenity import Amenity, PropertyAmenity
 from app.models.property import Property, PropertyKind, PropertyStatus
 from app.models.property_image import PropertyImage
 from app.models.property_translation import PropertyTranslation
@@ -102,6 +103,169 @@ async def list_all(
     total = await db.scalar(count_query) or 0
     result = await db.scalars(query)
     return list(result.all()), total
+
+
+# --- List published (public, single-locale) ---
+async def list_published(
+    db: AsyncSession,
+    *,
+    locale: str = "ru",
+    kind: PropertyKind = PropertyKind.rental,
+    page: int = 1,
+    limit: int = 20,
+    location_id: uuid.UUID | None = None,
+    bedrooms: int | None = None,
+    guests: int | None = None,
+    min_price: Decimal | None = None,
+    max_price: Decimal | None = None,
+) -> tuple[list[dict], int]:
+    # → base filters: published + kind
+    filters = [
+        Property.status == PropertyStatus.published,
+        Property.kind == kind,
+    ]
+    if location_id is not None:
+        filters.append(Property.location_id == location_id)
+    if bedrooms is not None:
+        filters.append(Property.bedrooms >= bedrooms)
+    if guests is not None:
+        filters.append(Property.guests >= guests)
+    if min_price is not None:
+        filters.append(Property.price_per_night >= min_price)
+    if max_price is not None:
+        filters.append(Property.price_per_night <= max_price)
+
+    # --- Count ---
+    count_query = select(func.count()).select_from(Property).where(*filters)
+    total = await db.scalar(count_query) or 0
+
+    # --- Fetch with locale translation ---
+    query = (
+        select(Property)
+        .options(
+            selectinload(Property.location),
+            selectinload(Property.images),
+            selectinload(Property.translations),
+        )
+        .where(*filters)
+        .order_by(Property.created_at.desc())
+        .offset((page - 1) * limit)
+        .limit(limit)
+    )
+    result = await db.scalars(query)
+    properties = list(result.all())
+
+    # → flatten to single-locale dicts for PropertyList schema
+    items: list[dict] = []
+    for prop in properties:
+        trans = next((t for t in prop.translations if t.locale == locale), None)
+        main_img = next((img for img in prop.images if img.is_main), None)
+        # → fall back to first image if no main is set
+        if main_img is None and prop.images:
+            main_img = min(prop.images, key=lambda i: i.position)
+
+        items.append(
+            {
+                "id": prop.id,
+                "kind": prop.kind,
+                "bedrooms": prop.bedrooms,
+                "guests": prop.guests,
+                "price_per_night": prop.price_per_night,
+                "sale_price": prop.sale_price,
+                "sale_price_discounted": prop.sale_price_discounted,
+                "location": prop.location,
+                "title": trans.title if trans else None,
+                "slug": trans.slug if trans else None,
+                "description": trans.description if trans else None,
+                "main_image_url": main_img.url if main_img else None,
+            }
+        )
+
+    return items, total
+
+
+# --- Get by slug (public detail, single-locale) ---
+async def get_by_slug(
+    db: AsyncSession,
+    slug: str,
+    locale: str = "ru",
+) -> dict:
+    # → look up property via translated slug + locale
+    translation = await db.scalar(
+        select(PropertyTranslation).where(
+            PropertyTranslation.slug == slug,
+            PropertyTranslation.locale == locale,
+        )
+    )
+    if translation is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Property not found",
+        )
+
+    prop = await db.scalar(
+        select(Property)
+        .options(
+            selectinload(Property.location),
+            selectinload(Property.images),
+            selectinload(Property.amenities)
+            .selectinload(PropertyAmenity.amenity)
+            .selectinload(Amenity.translations),
+        )
+        .where(
+            Property.id == translation.property_id,
+            Property.status == PropertyStatus.published,
+        )
+    )
+    if prop is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Property not found",
+        )
+
+    # → build locale-filtered amenity list
+    amenities = []
+    for pa in prop.amenities:
+        amenity = pa.amenity
+        name_trans = next((t for t in amenity.translations if t.locale == locale), None)
+        if name_trans:
+            amenities.append(
+                {
+                    "id": amenity.id,
+                    "icon": amenity.icon,
+                    "name": name_trans.name,
+                }
+            )
+
+    return {
+        "id": prop.id,
+        "kind": prop.kind,
+        "bedrooms": prop.bedrooms,
+        "guests": prop.guests,
+        "price_per_night": prop.price_per_night,
+        "sale_price": prop.sale_price,
+        "sale_price_discounted": prop.sale_price_discounted,
+        "location": prop.location,
+        "lat": prop.lat,
+        "lng": prop.lng,
+        "created_at": prop.created_at,
+        "updated_at": prop.updated_at,
+        "title": translation.title,
+        "slug": translation.slug,
+        "description": translation.description,
+        "meta_title": translation.meta_title,
+        "meta_description": translation.meta_description,
+        "images": [
+            {
+                "id": img.id,
+                "url": img.url,
+                "position": img.position,
+                "is_main": img.is_main,
+            }
+            for img in sorted(prop.images, key=lambda i: i.position)
+        ],
+        "amenities": amenities,
+    }
 
 
 # --- Update (partial) ---
